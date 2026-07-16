@@ -4,13 +4,7 @@ export default function Header({ onStart }) {
   return (
     <header className="header" role="banner">
       <a className="logo" href="#" aria-label="Hipócrates Home">
-        <div className="logo-mark" aria-hidden="true">
-          <Plus weight="bold" />
-        </div>
-        <div className="logo-text">
-          <span className="a">Hipócrates</span>
-          <span className="b">Digital Front Door</span>
-        </div>
+        <img src="/Logo01.svg" alt="Hipócrates Logo" style={{ height: '65px', width: 'auto' }} />
       </a>
 
       <nav className="nav-pills" aria-label="Primary">
@@ -32,10 +26,6 @@ export default function Header({ onStart }) {
         <span className="cta-text">Iniciar Triagem</span>
         <span className="cta-dot">
           <ArrowRight weight="bold" />
-        </span>
-        <span className="cta-arrows" aria-hidden="true">
-          <CaretRight weight="bold" />
-          <CaretRight weight="bold" />
         </span>
       </button>
     </header>
