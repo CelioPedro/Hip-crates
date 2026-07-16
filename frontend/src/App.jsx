@@ -8,6 +8,7 @@ import Hero from './components/Hero';
 import Specialties from './components/Specialties';
 import Footer from './components/Footer';
 import ChatModal from './components/ChatModal';
+import ImmersiveSection from './components/ImmersiveSection';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -46,12 +47,11 @@ function App() {
       .to(".badge", { scale: 1, rotation: 0, opacity: 1, duration: 0.8, ease: "back.out(1.7)" }, "-=.5");
 
     // ─── WAVE FLOAT ───
-    gsap.to(".wave-wrap", { y: -18, rotation: -1.2, duration: 5.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    gsap.to(".wave-wrap img", { y: -18, rotation: -1.2, duration: 5.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
     gsap.to(".wave-glow", { y: 12, scale: 1.05, duration: 6, repeat: -1, yoyo: true, ease: "sine.inOut" });
     gsap.to(".wave-glow.b", { y: -16, x: -10, duration: 7, repeat: -1, yoyo: true, ease: "sine.inOut" });
     
-    // Badge drift & Icons
-    gsap.to(".badge", { y: "+=8", duration: 3.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    // Badge drift & Icons (removed y drift from badge to avoid scroll conflict)
     gsap.to(".dna-icon svg", { rotation: 12, duration: 4, repeat: -1, yoyo: true, ease: "sine.inOut", transformOrigin: "50% 50%" });
     gsap.to(".avatar-group", { rotation: 3, duration: 3, repeat: -1, yoyo: true, ease: "sine.inOut" });
 
@@ -85,6 +85,8 @@ function App() {
       <Header onStart={() => setIsChatOpen(true)} />
       
       <Hero onStart={() => setIsChatOpen(true)} />
+
+      <ImmersiveSection />
 
       <Specialties />
 
