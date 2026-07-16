@@ -4,7 +4,7 @@ export default function Header({ onStart }) {
   return (
     <header className="header" role="banner">
       <a className="logo" href="#" aria-label="Hipócrates Home">
-        <img src="/Logo01.svg" alt="Hipócrates Logo" style={{ height: '65px', width: 'auto' }} />
+        <img src="/Logo01.svg" alt="Hipócrates Logo" style={{ height: '60px', width: 'auto' }} />
       </a>
 
       <nav className="nav-pills" aria-label="Primary">

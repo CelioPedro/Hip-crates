@@ -66,7 +66,7 @@ function App() {
     });
     gsap.to(".badge", {
       scrollTrigger: { trigger: "body", start: "top top", end: "+=800", scrub: 1.5 },
-      y: 80, rotation: 30
+      y: 80
     });
 
   }, []);
