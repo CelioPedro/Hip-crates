@@ -19,7 +19,7 @@ export default function Hero({ onStart }) {
               <img src="https://i.pravatar.cc/100?img=12" alt="User 3" />
             </span>
             <span className="icon-tile dna-icon">
-              <Infinity weight="bold" size={24} color="#000" />
+              <img src="/favmed.svg" alt="Favmed Icon" style={{ width: '25px', height: '25px', objectFit: 'contain', zIndex: 1, position: 'relative' }} />
             </span>
             <span className="paren">)</span>
           </span>
@@ -46,7 +46,7 @@ export default function Hero({ onStart }) {
           </text>
         </svg>
         <span className="badge-center">
-          <Infinity weight="bold" />
+          <img src="/favmed.svg" alt="Favmed Icon" />
         </span>
       </div>
     </section>
