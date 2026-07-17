@@ -4,15 +4,7 @@ export default function Footer() {
   return (
     <div className="footer-row">
       <div className="social">
-        <a href="#" className="social-btn" aria-label="Twitter">
-          <TwitterLogo weight="fill" size={20} />
-        </a>
-        <a href="#" className="social-btn" aria-label="Facebook">
-          <FacebookLogo weight="fill" size={20} />
-        </a>
-        <a href="#" className="social-btn" aria-label="Instagram">
-          <InstagramLogo weight="regular" size={20} />
-        </a>
+        {/* Social icons migrated to ImmersiveSection choreography */}
       </div>
 
       <a href="#" className="discover">

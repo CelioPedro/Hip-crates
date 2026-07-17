@@ -5,8 +5,6 @@ import { useGSAP } from '@gsap/react';
 
 import Header from './components/Header';
 import Hero from './components/Hero';
-import Specialties from './components/Specialties';
-import Footer from './components/Footer';
 import ChatModal from './components/ChatModal';
 import ImmersiveSection from './components/ImmersiveSection';
 
@@ -80,17 +78,15 @@ function App() {
         <img src="https://cdn.shopify.com/s/files/1/0185/5999/1872/files/blue_strand_transparent.png?v=1778949964" alt="Fluxo de dados azul" />
       </div>
 
-      <div className="bg-text" aria-hidden="true">HIPÓCRATES</div>
+      <div className="bg-text-wrapper" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}>
+        <div className="bg-text" aria-hidden="true">HIPÓCRATES</div>
+      </div>
 
       <Header onStart={() => setIsChatOpen(true)} />
       
       <Hero onStart={() => setIsChatOpen(true)} />
 
       <ImmersiveSection />
-
-      <Specialties />
-
-      <Footer />
 
       {isChatOpen && <ChatModal onClose={() => setIsChatOpen(false)} />}
     </div>
