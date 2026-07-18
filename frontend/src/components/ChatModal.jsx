@@ -63,11 +63,11 @@ export default function ChatModal({ onClose }) {
         <div className="chat-header">
           <div className="bot-info">
             <div className="bot-avatar">
-              <Robot size={24} weight="duotone" />
+              <img src="/Logo01.svg" alt="Hipócrates.IA Logo" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
             </div>
             <div>
               <h3>Triagem Inteligente</h3>
-              <p>IA Empática do Hipócrates</p>
+              <p>HIPÓCRATES.IA</p>
             </div>
           </div>
           <button className="chat-close" onClick={onClose} aria-label="Fechar">
