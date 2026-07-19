@@ -40,46 +40,70 @@ export default function ImmersiveSection() {
   ];
 
   useGSAP(() => {
-    // 1. Typing effect timeline (Independent Trigger)
+    const preventScroll = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    };
+
+    // 1. Typing effect timeline
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top 35%", // Triggered when section reaches this point
+        start: "top 35%",
+      },
+      onStart: () => {
+        window.addEventListener('wheel', preventScroll, { passive: false });
+        window.addEventListener('touchmove', preventScroll, { passive: false });
+      },
+      onComplete: () => {
+        window.removeEventListener('wheel', preventScroll);
+        window.removeEventListener('touchmove', preventScroll);
+        if (bustState.current) bustState.current.phase = "DONE"; 
       }
     });
 
     const titleChars = titleRef.current.querySelectorAll('.anim-char');
     const descChars = descRef.current.querySelectorAll('.anim-char');
-    const allChars = [...titleChars, ...descChars];
 
-    gsap.set(allChars, { opacity: 0, y: 15, filter: "blur(4px)" });
+    gsap.set([titleChars, descChars], { opacity: 0, y: 15, filter: "blur(4px)" });
 
-    tl.to(allChars, {
+    const trackReading = function() {
+      bustState.current.phase = "READING"; 
+      const el = this.targets()[0];
+      if (el && el.getBoundingClientRect) {
+        const rect = el.getBoundingClientRect();
+        if (rect.width > 0) {
+          let nx = (rect.left + rect.width / 2) / window.innerWidth * 2 - 1;
+          let ny = -(rect.top + rect.height / 2) / window.innerHeight * 2 + 1;
+          nx = Math.max(-0.6, Math.min(0.6, nx));
+          ny = Math.max(-0.6, Math.min(0.6, ny));
+          bustState.current.simulatedX = nx;
+          bustState.current.simulatedY = ny;
+        }
+      }
+    };
+
+    tl.to(titleChars, {
       opacity: 1,
       y: 0,
       filter: "blur(0px)",
-      duration: 1.8, 
+      duration: 0.8, 
       ease: "power2.out",
       stagger: {
         each: 0.05, 
-        onStart: function() {
-          bustState.current.phase = "READING"; 
-          const el = this.targets()[0];
-          if (el && el.getBoundingClientRect) {
-            const rect = el.getBoundingClientRect();
-            if (rect.width > 0) {
-              let nx = (rect.left + rect.width / 2) / window.innerWidth * 2 - 1;
-              let ny = -(rect.top + rect.height / 2) / window.innerHeight * 2 + 1;
-              nx = Math.max(-0.6, Math.min(0.6, nx));
-              ny = Math.max(-0.6, Math.min(0.6, ny));
-              bustState.current.simulatedX = nx;
-              bustState.current.simulatedY = ny;
-            }
-          }
-        }
-      },
-      onComplete: () => {
-        if (bustState.current) bustState.current.phase = "DONE"; 
+        onStart: trackReading
+      }
+    })
+    .to(descChars, {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      duration: 0.8, 
+      ease: "power2.out",
+      stagger: {
+        each: 0.05, 
+        onStart: trackReading
       }
     });
 

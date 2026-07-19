@@ -8,6 +8,18 @@ function BustModel({ bustState, ...props }) {
   // We use the primitive object to load whatever is in the scene
   const { scene } = useGLTF('/models/hipo.glb');
 
+  const mouse = useRef({ x: 0, y: 0 });
+
+  React.useEffect(() => {
+    const handleMouseMove = (e) => {
+      // Normalize mouse to -1 to +1
+      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   useFrame((state) => {
     let targetX, targetY;
 
@@ -25,20 +37,20 @@ function BustModel({ bustState, ...props }) {
         targetX = baseLookX + (bustState.current.simulatedX * Math.PI) / 20;
         targetY = baseLookY + (bustState.current.simulatedY * Math.PI) / 20;
       } else {
-        // "DONE" -> Hand control back to user mouse
-        targetX = (state.pointer.x * Math.PI) / 8;
-        targetY = (state.pointer.y * Math.PI) / 8;
+        // "DONE" -> Hand control back to user mouse globally
+        targetX = (mouse.current.x * Math.PI) / 8;
+        targetY = (mouse.current.y * Math.PI) / 8;
       }
     } else {
       // Fallback standard mouse tracking
-      targetX = (state.pointer.x * Math.PI) / 8;
-      targetY = (state.pointer.y * Math.PI) / 8;
+      targetX = (mouse.current.x * Math.PI) / 8;
+      targetY = (mouse.current.y * Math.PI) / 8;
     }
 
     if (group.current) {
-      // Reverted lerp speed to 0.05 for much smoother and softer head turns (eliminating the aggressive snap)
-      group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, targetX, 0.05);
-      group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, -targetY, 0.05);
+      // Reduced lerp speed to 0.011 for extremely smooth and natural head turns
+      group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, targetX, 0.011);
+      group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, -targetY, 0.011);
     }
   });
 
