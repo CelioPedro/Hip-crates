@@ -1,0 +1,83 @@
+.marquee-scroll-area {
+  max-height: 325px; /* Show exactly 5 items (5 * 65) */
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 12px;
+  /* Hide scrollbar for the internal list as well */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.marquee-scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+.marquee-wrapper {
+  width: 100%;
+  position: relative;
+  --total: 12;
+  --row-height: 65px; /* Restored to a premium, breathable size */
+}
+
+/* Hover logic migrated to React state for persistence */
+
+.marquee-item {
+  position: relative;
+  height: var(--row-height);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 1.4rem; /* Restored */
+  color: var(--text-2);
+}
+
+.marquee-item:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-bottom: 1px solid var(--line);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.marquee-list {
+  position: absolute;
+  inset: 0;
+  background-color: var(--card); /* The white highlight */
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.marquee-row {
+  height: var(--row-height);
+  overflow: hidden;
+}
+
+.marquee-row img {
+  width: 90px; /* Restored */
+  aspect-ratio: 2.5;
+  border-radius: 99px;
+  object-fit: cover;
+}
+
+.marquee-inner {
+  height: var(--row-height);
+  width: max-content;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding-left: 32px;
+  animation: marquee linear 12s infinite;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1.35rem; /* Restored */
+  font-weight: 500;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}

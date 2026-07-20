@@ -1,11 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { TextPlugin } from 'gsap/TextPlugin';
 import { useGSAP } from '@gsap/react';
 import InteractiveBust from './InteractiveBust';
-import { Dna, Heartbeat, Brain, Scan, ChartLineUp, DotsThree } from "@phosphor-icons/react";
+import { Dna, Heartbeat, Brain, Scan, ChartLineUp, DotsThree, CaretDown, CaretUp } from "@phosphor-icons/react";
 import { FacebookLogo, TwitterLogo, InstagramLogo } from "@phosphor-icons/react";
+import './MarqueeList.css';
+import { useLenis } from 'lenis/react';
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
@@ -17,7 +19,33 @@ export default function ImmersiveSection() {
   const textWrapperRef = useRef(null);
   const cardsWrapperRef = useRef(null);
   const doctorClusterRef = useRef(null);
+  const teamClusterRef = useRef(null);
   const socialRef = useRef(null);
+  const lenis = useLenis();
+  const lenisInstanceRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollTimeoutRef = useRef(null);
+  const [canScrollTop, setCanScrollTop] = useState(false);
+  const [canScrollBottom, setCanScrollBottom] = useState(true);
+
+  const handleMarqueeScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    setCanScrollTop(scrollTop > 0);
+    setCanScrollBottom(Math.ceil(scrollTop + clientHeight) < scrollHeight);
+
+    // Disable hover states while scrolling to prevent chaotic jumping
+    setIsScrolling(true);
+    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    scrollTimeoutRef.current = setTimeout(() => {
+      setIsScrolling(false);
+    }, 150);
+  };
+
+  // Always keep the latest lenis instance in a ref to avoid stale closures in useGSAP
+  useEffect(() => {
+    lenisInstanceRef.current = lenis;
+  }, [lenis]);
 
   const bustState = useRef({ phase: "START", simulatedX: 0, simulatedY: 0 });
 
@@ -40,12 +68,6 @@ export default function ImmersiveSection() {
   ];
 
   useGSAP(() => {
-    const preventScroll = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    };
-
     // 1. Typing effect timeline
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -53,12 +75,12 @@ export default function ImmersiveSection() {
         start: "top top", // Trigger exactly when the section is fully framed and pinned
       },
       onStart: () => {
-        window.addEventListener('wheel', preventScroll, { passive: false });
-        window.addEventListener('touchmove', preventScroll, { passive: false });
+        // Stop smooth scrolling while the typing effect happens
+        if (lenisInstanceRef.current) lenisInstanceRef.current.stop();
       },
       onComplete: () => {
-        window.removeEventListener('wheel', preventScroll);
-        window.removeEventListener('touchmove', preventScroll);
+        // Resume smooth scrolling
+        if (lenisInstanceRef.current) lenisInstanceRef.current.start();
         if (bustState.current) bustState.current.phase = "DONE"; 
       }
     });
@@ -139,7 +161,7 @@ export default function ImmersiveSection() {
       scrollTrigger: {
         trigger: sectionRef.current,
         start: "top top", // Pins when section reaches top of viewport
-        end: "+=2500", // Increased to 2500px to accommodate all 4 phases of the story
+        end: "+=3500", // Increased to accommodate the team presentation
         pin: true,
         scrub: 1.5,
       }
@@ -147,10 +169,12 @@ export default function ImmersiveSection() {
 
     const cards = cardsWrapperRef.current.querySelectorAll('.treatment');
     const doctorCards = doctorClusterRef.current.querySelectorAll('.clay-card');
+    const marqueeList = teamClusterRef.current.querySelector('.marquee-list');
     
     // Set initial states
     gsap.set(cards, { opacity: 0, x: -40, filter: "blur(4px)" });
     gsap.set(doctorCards, { opacity: 0, scale: 0.9, y: 30, filter: "blur(8px)" });
+    gsap.set(marqueeList, { opacity: 0 }); // Hide the white background initially
 
     pinTl
       // PHASE 1: Pause slightly at the beginning
@@ -207,9 +231,34 @@ export default function ImmersiveSection() {
         "-=0.8"
       )
       
-      // Enable interaction for the final phase
-      .set(doctorClusterRef.current, { pointerEvents: "auto" })
-      .set(socialRef.current, { pointerEvents: "auto" });
+      // PHASE 6: Fade out Doctor & Info cluster
+      .to({}, { duration: 0.5 }) // Wait before fading out
+      .to([doctorCards, socialRef.current.querySelectorAll('.social-btn')], {
+        opacity: 0,
+        y: -30,
+        filter: "blur(8px)",
+        duration: 1,
+        stagger: 0.05,
+        ease: "power2.in"
+      })
+      .set(doctorClusterRef.current, { pointerEvents: "none" })
+      .set(socialRef.current, { pointerEvents: "none" })
+
+      // PHASE 7: Appear Team Marquee Cluster instantly to avoid scroll hijacking conflicts
+      .set(teamClusterRef.current, { pointerEvents: "auto" }, "-=0.2")
+      .set(teamClusterRef.current.querySelectorAll('.marquee-item'), {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)"
+      })
+      .set(teamClusterRef.current.querySelector('.marquee-list'), {
+        opacity: 1
+      })
+      .set(teamClusterRef.current.querySelectorAll('.marquee-indicator'), {
+        opacity: 0.6
+      })
+      // Add buffer so the section remains pinned for a bit while they interact with the marquee
+      .to({}, { duration: 1.5 });
 
   }, { scope: sectionRef, dependencies: [] });
 
@@ -267,16 +316,16 @@ export default function ImmersiveSection() {
           </div>
         </div>
 
-        {/* Doctor & Info Cluster */}
+        {/* Doctor & Info Cluster (CEO / Diretor) */}
         <div ref={doctorClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%', pointerEvents: 'none' }}>
           <div className="doctor-cluster" style={{ marginTop: 0 }}>
             <div className="clay-card doctor-card">
               <div className="doctor-avatar" aria-hidden="true">
-                <img src="https://i.pravatar.cc/150?img=47" alt="Médico" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150" alt="Médica" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div className="doctor-meta">
                 <div className="name">Dra. Sarah Johnson</div>
-                <div className="role">Chief Medical Officer</div>
+                <div className="role">Diretoria Médica</div>
               </div>
               <button className="search-btn" aria-label="Pesquisar">
                 <DotsThree weight="bold" />
@@ -300,6 +349,158 @@ export default function ImmersiveSection() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Team Cluster (Phase 7) - Marquee Hover UI */}
+        <div ref={teamClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%', pointerEvents: 'none' }}>
+          
+          <div 
+            className="marquee-scroll-area" 
+            data-lenis-prevent="true"
+            onScroll={handleMarqueeScroll}
+            style={{
+              WebkitMaskImage: canScrollTop && canScrollBottom 
+                ? 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)'
+                : canScrollTop 
+                  ? 'linear-gradient(to bottom, transparent 0%, black 15%, black 100%)'
+                  : canScrollBottom 
+                    ? 'linear-gradient(to bottom, black 85%, transparent 100%)'
+                    : 'none',
+              maskImage: canScrollTop && canScrollBottom 
+                ? 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)'
+                : canScrollTop 
+                  ? 'linear-gradient(to bottom, transparent 0%, black 15%, black 100%)'
+                  : canScrollBottom 
+                    ? 'linear-gradient(to bottom, black 85%, transparent 100%)'
+                    : 'none',
+              transition: 'mask-image 0.3s ease, -webkit-mask-image 0.3s ease'
+            }}
+          >
+            <div className="marquee-wrapper" style={{ pointerEvents: isScrolling ? 'none' : 'auto' }}>
+              {/* The static list items that act as hover triggers */}
+              {[
+                { name: "Dra. Sarah Johnson", specialty: "Neurologia", img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150" },
+                { name: "Dr. Michael Chen", specialty: "Oncologia", img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=150&h=150" },
+                { name: "Dra. Elena Rodriguez", specialty: "Genética Forense", img: "https://images.unsplash.com/photo-1594824436998-dd40d59faeb1?auto=format&fit=crop&q=80&w=150&h=150" },
+                { name: "Dr. Arthur Lima", specialty: "Cardiologia IA", img: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=150&h=150" },
+                { name: "Dra. Letícia Costa", specialty: "Pediatria", img: "https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=150&h=150" },
+                { name: "Dr. Roberto Silva", specialty: "Ortopedia 3D", img: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=150&h=150" },
+                { name: "Dra. Camila Nunes", specialty: "Dermatologia", img: "https://images.unsplash.com/photo-1594824436998-dd40d59faeb1?auto=format&fit=crop&q=80&w=150&h=150" },
+                { name: "Dr. Lucas Martins", specialty: "Psiquiatria", img: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=150&h=150" },
+                { name: "Dra. Juliana Prado", specialty: "Nutrologia", img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150" },
+                { name: "Dr. Marcos Rocha", specialty: "Fisioterapia", img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=150&h=150" },
+                { name: "Dra. Beatriz Santos", specialty: "Oftalmologia", img: "https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=150&h=150" },
+                { name: "Dr. Tiago Mendes", specialty: "Urologia", img: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=150&h=150" }
+              ].map((doc, i) => (
+                <div 
+                  className="marquee-item" 
+                  key={i} 
+                  style={{ 
+                    opacity: 0, 
+                    transform: 'translateY(20px)', 
+                    filter: 'blur(4px)',
+                    transition: 'opacity 1.5s ease, transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), filter 1.5s ease'
+                  }}
+                  onMouseEnter={() => setActiveIndex(i)}
+                >
+                  {doc.name}
+                </div>
+              ))}
+
+              {/* The hidden marquee container that masks rows based on the hovered item */}
+              <div 
+                className="marquee-horizontal-mask"
+                style={{
+                  position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 5,
+                  WebkitMaskImage: 'linear-gradient(90deg, transparent, #000 10% 90%, transparent)',
+                  maskImage: 'linear-gradient(90deg, transparent, #000 10% 90%, transparent)'
+                }}
+              >
+                <div className="marquee-list" style={{
+                  transition: 'opacity 1.5s ease, mask-position 0.4s ease, -webkit-mask-position 0.4s ease',
+                  WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 15px, black 50px, transparent 100%)',
+                  WebkitMaskSize: '100% 65px',
+                  WebkitMaskRepeat: 'no-repeat',
+                  WebkitMaskPosition: `0px calc(${activeIndex} * 65px)`,
+                  maskImage: 'linear-gradient(to bottom, transparent 0%, black 15px, black 50px, transparent 100%)',
+                  maskSize: '100% 65px',
+                  maskRepeat: 'no-repeat',
+                  maskPosition: `0px calc(${activeIndex} * 65px)`,
+                }}>
+                  {[
+                  { name: "Dra. Sarah Johnson", specialty: "Neurologia", img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150" },
+                  { name: "Dr. Michael Chen", specialty: "Oncologia", img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=150&h=150" },
+                  { name: "Dra. Elena Rodriguez", specialty: "Genética Forense", img: "https://images.unsplash.com/photo-1594824436998-dd40d59faeb1?auto=format&fit=crop&q=80&w=150&h=150" },
+                  { name: "Dr. Arthur Lima", specialty: "Cardiologia IA", img: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=150&h=150" },
+                  { name: "Dra. Letícia Costa", specialty: "Pediatria", img: "https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=150&h=150" },
+                  { name: "Dr. Roberto Silva", specialty: "Ortopedia 3D", img: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=150&h=150" },
+                  { name: "Dra. Camila Nunes", specialty: "Dermatologia", img: "https://images.unsplash.com/photo-1594824436998-dd40d59faeb1?auto=format&fit=crop&q=80&w=150&h=150" },
+                  { name: "Dr. Lucas Martins", specialty: "Psiquiatria", img: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=150&h=150" },
+                  { name: "Dra. Juliana Prado", specialty: "Nutrologia", img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150" },
+                  { name: "Dr. Marcos Rocha", specialty: "Fisioterapia", img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=150&h=150" },
+                  { name: "Dra. Beatriz Santos", specialty: "Oftalmologia", img: "https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=150&h=150" },
+                  { name: "Dr. Tiago Mendes", specialty: "Urologia", img: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=150&h=150" }
+                ].map((doc, i) => (
+                  <div className="marquee-row" key={i}>
+                    <div className="marquee-inner">
+                      <span>{doc.name}</span>
+                      <img src={doc.img} alt={doc.name} />
+                      <span>{doc.specialty}</span>
+                      <img src={doc.img} alt={doc.name} />
+                      <span>{doc.name}</span>
+                      <img src={doc.img} alt={doc.name} />
+                      <span>{doc.specialty}</span>
+                      <img src={doc.img} alt={doc.name} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Subtle scroll indicator TOP */}
+          <div className={`marquee-indicator ${!canScrollTop ? 'hidden' : ''}`} style={{
+            position: 'absolute',
+            top: '-25px', 
+            left: '50%',
+            transform: 'translateX(-50%)',
+            pointerEvents: 'none',
+            opacity: 0, 
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <CaretUp size={18} color="var(--text-2)" style={{ animation: 'subtleBounce 2s infinite ease-in-out' }} />
+          </div>
+
+          {/* Subtle scroll indicator BOTTOM */}
+          <div className={`marquee-indicator ${!canScrollBottom ? 'hidden' : ''}`} style={{
+            position: 'absolute',
+            bottom: '-25px', 
+            left: '50%',
+            transform: 'translateX(-50%)',
+            pointerEvents: 'none',
+            opacity: 0, 
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <style>
+              {`
+                @keyframes subtleBounce {
+                  0%, 100% { transform: translateY(0); }
+                  50% { transform: translateY(5px); }
+                }
+                .marquee-indicator { transition: opacity 1.5s ease !important; }
+                .marquee-indicator.hidden { opacity: 0 !important; }
+              `}
+            </style>
+            <CaretDown size={18} color="var(--text-2)" style={{ animation: 'subtleBounce 2s infinite ease-in-out' }} />
+          </div>
+
         </div>
 
         {/* Social Icons */}
