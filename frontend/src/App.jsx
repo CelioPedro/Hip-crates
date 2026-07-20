@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { ReactLenis } from 'lenis/react';
 
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -12,6 +13,17 @@ gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const lenisRef = useRef(null);
+
+  // Sync GSAP ticker with Lenis
+  useEffect(() => {
+    function update(time) {
+      lenisRef.current?.lenis?.raf(time * 1000);
+    }
+    gsap.ticker.add(update);
+    gsap.ticker.lagSmoothing(0); // Very important for Lenis!
+    return () => gsap.ticker.remove(update);
+  }, []);
 
   useGSAP(() => {
     // ─── INITIAL STATES ───
@@ -70,26 +82,28 @@ function App() {
   }, []);
 
   return (
-    <div className="page">
-      {/* ─── WAVE PNG + ATMOSPHERIC GLOW ─── */}
-      <div className="wave-glow"></div>
-      <div className="wave-glow b"></div>
-      <div className="wave-wrap" id="wave">
-        <img src="https://cdn.shopify.com/s/files/1/0185/5999/1872/files/blue_strand_transparent.png?v=1778949964" alt="Fluxo de dados azul" />
+    <ReactLenis root ref={lenisRef} autoRaf={false}>
+      <div className="page">
+        {/* ─── WAVE PNG + ATMOSPHERIC GLOW ─── */}
+        <div className="wave-glow"></div>
+        <div className="wave-glow b"></div>
+        <div className="wave-wrap" id="wave">
+          <img src="https://cdn.shopify.com/s/files/1/0185/5999/1872/files/blue_strand_transparent.png?v=1778949964" alt="Fluxo de dados azul" />
+        </div>
+
+        <div className="bg-text-wrapper" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}>
+          <div className="bg-text" aria-hidden="true">HIPÓCRATES</div>
+        </div>
+
+        <Header onStart={() => setIsChatOpen(true)} />
+        
+        <Hero onStart={() => setIsChatOpen(true)} />
+
+        <ImmersiveSection />
+
+        {isChatOpen && <ChatModal onClose={() => setIsChatOpen(false)} />}
       </div>
-
-      <div className="bg-text-wrapper" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}>
-        <div className="bg-text" aria-hidden="true">HIPÓCRATES</div>
-      </div>
-
-      <Header onStart={() => setIsChatOpen(true)} />
-      
-      <Hero onStart={() => setIsChatOpen(true)} />
-
-      <ImmersiveSection />
-
-      {isChatOpen && <ChatModal onClose={() => setIsChatOpen(false)} />}
-    </div>
+    </ReactLenis>
   );
 }
 
