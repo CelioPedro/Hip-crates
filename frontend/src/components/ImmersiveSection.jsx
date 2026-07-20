@@ -50,7 +50,7 @@ export default function ImmersiveSection() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top 35%",
+        start: "top top", // Trigger exactly when the section is fully framed and pinned
       },
       onStart: () => {
         window.addEventListener('wheel', preventScroll, { passive: false });
