@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { ReactLenis } from 'lenis/react';
+import { ArrowDown } from "@phosphor-icons/react";
 
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -79,6 +80,19 @@ function App() {
       y: 80
     });
 
+    // Global scroll badge visibility (appears from second section onwards)
+    gsap.to(".global-scroll-badge", {
+      scrollTrigger: {
+        trigger: ".immersive-section",
+        start: "top center", // appears when the second section reaches the middle of the screen
+        toggleActions: "play none none reverse"
+      },
+      opacity: 1,
+      scale: 1,
+      duration: 0.6,
+      ease: "back.out(1.5)"
+    });
+
   }, []);
 
   return (
@@ -100,6 +114,21 @@ function App() {
         <Hero onStart={() => setIsChatOpen(true)} />
 
         <ImmersiveSection />
+
+        {/* ─── GLOBAL SCROLL INDICATOR ─── */}
+        <div className="global-scroll-badge" aria-hidden="true">
+          <svg className="ring" viewBox="0 0 100 100">
+            <defs>
+              <path id="global-badge-path" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" fill="none" />
+            </defs>
+            <text fontFamily="Inter Tight, sans-serif" fontSize="9.5" fontWeight="500" fill="#666" letterSpacing="2.4">
+              <textPath href="#global-badge-path">Role · Explore · Descubra · </textPath>
+            </text>
+          </svg>
+          <span className="badge-center">
+            <ArrowDown weight="bold" size={18} color="#080808" />
+          </span>
+        </div>
 
         {isChatOpen && <ChatModal onClose={() => setIsChatOpen(false)} />}
       </div>

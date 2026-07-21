@@ -528,6 +528,42 @@ img {
   }
 }
 
+/* GLOBAL SCROLL BADGE (Starts from 2nd section) */
+.global-scroll-badge {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  width: 90px;
+  height: 90px;
+  z-index: 50;
+  opacity: 0; /* Handled by GSAP */
+  pointer-events: none; /* So it doesn't block clicks */
+}
+
+.global-scroll-badge .ring {
+  position: absolute;
+  inset: 0;
+  animation: spin 18s linear infinite;
+}
+
+.global-scroll-badge .badge-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--card);
+  display: grid;
+  place-items: center;
+  box-shadow: 
+    0 12px 20px -8px rgba(0, 0, 0, 0.5),
+    0 6px 12px -4px rgba(0, 0, 0, 0.4), 
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
 .badge-center {
   position: absolute;
   left: 50%;
