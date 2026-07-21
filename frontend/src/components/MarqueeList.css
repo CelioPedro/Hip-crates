@@ -56,8 +56,8 @@
 }
 
 .marquee-row img {
-  width: 90px; /* Restored */
-  aspect-ratio: 2.5;
+  width: 75px; 
+  aspect-ratio: 1.8; /* Less extreme pill shape so faces can fit */
   border-radius: 99px;
   object-fit: cover;
 }
