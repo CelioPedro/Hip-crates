@@ -4,8 +4,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { TextPlugin } from 'gsap/TextPlugin';
 import { useGSAP } from '@gsap/react';
 import InteractiveBust from './InteractiveBust';
-import { Dna, Heartbeat, Brain, Scan, ChartLineUp, DotsThree, CaretDown, CaretUp } from "@phosphor-icons/react";
-import { FacebookLogo, TwitterLogo, InstagramLogo } from "@phosphor-icons/react";
+import GlassModal from './GlassModal';
+import FeatureModalContent from './FeatureModalContent';
+import { ArrowCircleRight, DotsThree, TwitterLogo, FacebookLogo, InstagramLogo, Scan, ChartLineUp, Dna, Heartbeat, CaretUp, CaretDown } from "@phosphor-icons/react";
 import './MarqueeList.css';
 import { useLenis } from 'lenis/react';
 
@@ -23,11 +24,13 @@ export default function ImmersiveSection() {
   const socialRef = useRef(null);
   const lenis = useLenis();
   const lenisInstanceRef = useRef(null);
+  const scrollTimeoutRef = useRef(null);
+  
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
-  const scrollTimeoutRef = useRef(null);
   const [canScrollTop, setCanScrollTop] = useState(false);
   const [canScrollBottom, setCanScrollBottom] = useState(true);
+  const [activeFeatureModal, setActiveFeatureModal] = useState(null);
 
   const handleMarqueeScroll = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
@@ -53,17 +56,20 @@ export default function ImmersiveSection() {
     {
       title: "Genética e Medicina Personalizada",
       desc: "Planos de tratamento baseados no genoma do paciente.",
-      icon: <Dna size={24} weight="duotone" />
+      icon: <Dna size={24} weight="duotone" />,
+      featureKey: "genetics"
     },
     {
       title: "Radiologia e Diagnóstico",
       desc: "Análise avançada de imagem com precisão algorítmica.",
-      icon: <Scan size={24} weight="duotone" />
+      icon: <Scan size={24} weight="duotone" />,
+      featureKey: "radiology"
     },
     {
       title: "Oncologia de Precisão",
       desc: "Imunoterapia e tratamentos guiados por biologia molecular.",
-      icon: <Heartbeat size={24} weight="duotone" />
+      icon: <Heartbeat size={24} weight="duotone" />,
+      featureKey: "oncology"
     }
   ];
 
@@ -160,21 +166,22 @@ export default function ImmersiveSection() {
     const pinTl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top top", // Pins when section reaches top of viewport
-        end: "+=3500", // Increased to accommodate the team presentation
+        start: "top top",
+        end: "+=600%", // Extends pin duration
         pin: true,
-        scrub: 1.5,
+        scrub: 1,
       }
     });
 
     const cards = cardsWrapperRef.current.querySelectorAll('.treatment');
-    const doctorCards = doctorClusterRef.current.querySelectorAll('.clay-card');
+    const doctorCards = doctorClusterRef.current.querySelectorAll('.doctor-card, .info-card');
     const marqueeList = teamClusterRef.current.querySelector('.marquee-list');
     
     // Set initial states
-    gsap.set(cards, { opacity: 0, x: -40, filter: "blur(4px)" });
-    gsap.set(doctorCards, { opacity: 0, scale: 0.9, y: 30, filter: "blur(8px)" });
-    gsap.set(marqueeList, { opacity: 0 }); // Hide the white background initially
+    gsap.set([cardsWrapperRef.current, doctorClusterRef.current, teamClusterRef.current], { autoAlpha: 0 });
+    gsap.set(cards, { x: -40, filter: "blur(4px)" });
+    gsap.set(doctorCards, { scale: 0.9, y: 30, filter: "blur(8px)" });
+    gsap.set(marqueeList, { autoAlpha: 0 }); // Hide the white background initially
 
     pinTl
       // PHASE 1: Pause slightly at the beginning
@@ -182,7 +189,7 @@ export default function ImmersiveSection() {
       
       // PHASE 2: Fade out introductory text
       .to(textWrapperRef.current, {
-        opacity: 0,
+        autoAlpha: 0,
         y: -30,
         filter: "blur(8px)",
         duration: 1,
@@ -190,72 +197,73 @@ export default function ImmersiveSection() {
       })
       
       // PHASE 3: Fade in specialty cards
+      .to(cardsWrapperRef.current, { autoAlpha: 1, duration: 0.1 }, "-=0.6")
       .to(cards, {
-        opacity: 1,
+        autoAlpha: 1,
         x: 0,
         filter: "blur(0px)",
         duration: 1.2,
         stagger: 0.2,
         ease: "power2.out"
-      }, "-=0.6")
+      }, "-=0.5")
       
       // Keep cards on screen for a moment while scrolling
       .to({}, { duration: 0.5 })
       
       // PHASE 4: Fade out specialty cards
       .to(cards, {
-        opacity: 0,
+        autoAlpha: 0,
         x: -40,
         filter: "blur(4px)",
         duration: 1,
         stagger: 0.1,
         ease: "power2.in"
       })
-      .set(cardsWrapperRef.current, { pointerEvents: "none" }) // Disable interaction when hidden
+      .to(cardsWrapperRef.current, { autoAlpha: 0, duration: 0.1 })
       
       // PHASE 5: Fade in Doctor & Info cluster
+      .to(doctorClusterRef.current, { autoAlpha: 1, duration: 0.1 }, "-=0.4")
       .to(doctorCards, {
-        opacity: 1,
+        autoAlpha: 1,
         scale: 1,
         y: 0,
         filter: "blur(0px)",
         duration: 1.2,
         stagger: 0.15,
         ease: "back.out(1.2)"
-      }, "-=0.4")
+      }, "-=0.3")
       
       // Phase 5b: Fade in Social Icons
       .fromTo(socialRef.current.querySelectorAll('.social-btn'),
-        { opacity: 0, y: 15 },
-        { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power2.out" },
+        { autoAlpha: 0, y: 15 },
+        { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power2.out" },
         "-=0.8"
       )
       
       // PHASE 6: Fade out Doctor & Info cluster
       .to({}, { duration: 0.5 }) // Wait before fading out
       .to([doctorCards, socialRef.current.querySelectorAll('.social-btn')], {
-        opacity: 0,
+        autoAlpha: 0,
         y: -30,
         filter: "blur(8px)",
         duration: 1,
         stagger: 0.05,
         ease: "power2.in"
       })
-      .set(doctorClusterRef.current, { pointerEvents: "none" })
-      .set(socialRef.current, { pointerEvents: "none" })
+      .to(doctorClusterRef.current, { autoAlpha: 0, duration: 0.1 })
 
       // PHASE 7: Appear Team Marquee Cluster instantly to avoid scroll hijacking conflicts
-      .set(teamClusterRef.current, { pointerEvents: "auto" }, "-=0.2")
+      .to(teamClusterRef.current, { autoAlpha: 1, duration: 0.1 })
       .set(teamClusterRef.current.querySelectorAll('.marquee-item'), {
-        opacity: 1,
+        autoAlpha: 1,
         y: 0,
         filter: "blur(0px)"
       })
       .set(teamClusterRef.current.querySelector('.marquee-list'), {
-        opacity: 1
+        autoAlpha: 1
       })
       .set(teamClusterRef.current.querySelectorAll('.marquee-indicator'), {
-        opacity: 0.6
+        opacity: 0.6 // Indicator opacity is handled manually by React styles
       })
       // Add buffer so the section remains pinned for a bit while they interact with the marquee
       .to({}, { duration: 1.5 });
@@ -301,10 +309,18 @@ export default function ImmersiveSection() {
         </div>
 
         {/* Cards Content */}
-        <div ref={cardsWrapperRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%', pointerEvents: 'none' }}>
+        <div ref={cardsWrapperRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
           <div className="treatments">
             {specialties.map((item, index) => (
-              <article className="clay-card treatment" key={index} style={{ marginBottom: index !== 2 ? '14px' : '0' }}>
+              <article 
+                className="clay-card treatment" 
+                key={index} 
+                style={{ marginBottom: index !== 2 ? '14px' : '0', cursor: 'pointer', pointerEvents: 'auto', position: 'relative', zIndex: 50 }}
+                onClick={(e) => {
+                  console.log("Card clicado!", item.featureKey);
+                  setActiveFeatureModal(item.featureKey);
+                }}
+              >
                 <div className="head">
                   <span className="icon" aria-hidden="true">{item.icon}</span>
                   <h3 style={{ fontSize: '15px' }}>{item.title}</h3>
@@ -317,7 +333,7 @@ export default function ImmersiveSection() {
         </div>
 
         {/* Doctor & Info Cluster (CEO / Diretor) */}
-        <div ref={doctorClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%', pointerEvents: 'none' }}>
+        <div ref={doctorClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
           <div className="doctor-cluster" style={{ marginTop: 0 }}>
             <div className="clay-card doctor-card">
               <div className="doctor-avatar" aria-hidden="true">
@@ -352,7 +368,7 @@ export default function ImmersiveSection() {
         </div>
 
         {/* Team Cluster (Phase 7) - Marquee Hover UI */}
-        <div ref={teamClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%', pointerEvents: 'none' }}>
+        <div ref={teamClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
           
           <div 
             className="marquee-scroll-area" 
@@ -536,6 +552,14 @@ export default function ImmersiveSection() {
       </div>
       
       </section>
+
+      <GlassModal 
+        isOpen={!!activeFeatureModal} 
+        onClose={() => setActiveFeatureModal(null)} 
+        title={activeFeatureModal ? specialties.find(s => s.featureKey === activeFeatureModal)?.title : ''}
+      >
+        <FeatureModalContent featureKey={activeFeatureModal} />
+      </GlassModal>
     </>
   );
 }
