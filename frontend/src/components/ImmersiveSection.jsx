@@ -6,9 +6,25 @@ import { useGSAP } from '@gsap/react';
 import InteractiveBust from './InteractiveBust';
 import GlassModal from './GlassModal';
 import FeatureModalContent from './FeatureModalContent';
+import ProfessionalCard from './ProfessionalCard';
 import { ArrowCircleRight, DotsThree, TwitterLogo, FacebookLogo, InstagramLogo, Scan, ChartLineUp, Dna, Heartbeat, CaretUp, CaretDown } from "@phosphor-icons/react";
 import './MarqueeList.css';
 import { useLenis } from 'lenis/react';
+
+const DOCTORS_DATA = [
+  { name: "Dra. Sarah Johnson", specialty: "Neurologia", img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=facearea&facepad=3&q=80&w=400&h=400", bgImg: "/drs/neurologia.jpeg" },
+  { name: "Dr. Michael Chen", specialty: "Oncologia", img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=facearea&facepad=3&q=80&w=400&h=400", bgImg: "/drs/oncologia.jpeg" },
+  { name: "Dra. Elena Rodriguez", specialty: "Genética Forense", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=facearea&facepad=3&q=80&w=400&h=400", bgImg: "/drs/genetica.jpeg" },
+  { name: "Dr. Arthur Lima", specialty: "Cardiologia IA", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&facepad=3&q=80&w=400&h=400", bgImg: "/drs/cardiologia.jpeg" },
+  { name: "Dra. Letícia Costa", specialty: "Pediatria", img: "https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=facearea&facepad=3&q=80&w=400&h=400", bgImg: "/drs/pediatria.jpeg" },
+  { name: "Dr. Roberto Silva", specialty: "Ortopedia 3D", img: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=facearea&facepad=3&q=80&w=400&h=400", bgImg: "/drs/ortopedia.jpeg" },
+  { name: "Dra. Camila Nunes", specialty: "Dermatologia", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=facearea&facepad=3&q=80&w=400&h=400", bgImg: "/drs/dermatologia.jpeg" },
+  { name: "Dr. Lucas Martins", specialty: "Psiquiatria", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&facepad=3&q=80&w=400&h=400", bgImg: "/drs/psiquiatria.jpeg" },
+  { name: "Dra. Juliana Prado", specialty: "Nutrologia", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=facearea&facepad=3&q=80&w=400&h=400", bgImg: "/drs/nutrologia.jpeg" },
+  { name: "Dr. Marcos Rocha", specialty: "Fisioterapia", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=facearea&facepad=3&q=80&w=400&h=400", bgImg: "/drs/fisioterapia.jpeg" },
+  { name: "Dra. Beatriz Santos", specialty: "Oftalmologia", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&facepad=3&q=80&w=400&h=400", bgImg: "/drs/oftalmologia.jpeg" },
+  { name: "Dr. Tiago Mendes", specialty: "Urologia", img: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=facearea&facepad=3&q=80&w=400&h=400", bgImg: "/drs/urologia.jpeg" }
+];
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
@@ -31,6 +47,7 @@ export default function ImmersiveSection() {
   const [canScrollTop, setCanScrollTop] = useState(false);
   const [canScrollBottom, setCanScrollBottom] = useState(true);
   const [activeFeatureModal, setActiveFeatureModal] = useState(null);
+  const [activeProfessional, setActiveProfessional] = useState(null);
 
   const handleMarqueeScroll = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
@@ -394,20 +411,7 @@ export default function ImmersiveSection() {
           >
             <div className="marquee-wrapper" style={{ pointerEvents: isScrolling ? 'none' : 'auto' }}>
               {/* The static list items that act as hover triggers */}
-              {[
-                { name: "Dra. Sarah Johnson", specialty: "Neurologia", img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                { name: "Dr. Michael Chen", specialty: "Oncologia", img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                { name: "Dra. Elena Rodriguez", specialty: "Genética Forense", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                { name: "Dr. Arthur Lima", specialty: "Cardiologia IA", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                { name: "Dra. Letícia Costa", specialty: "Pediatria", img: "https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                { name: "Dr. Roberto Silva", specialty: "Ortopedia 3D", img: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                { name: "Dra. Camila Nunes", specialty: "Dermatologia", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                { name: "Dr. Lucas Martins", specialty: "Psiquiatria", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                { name: "Dra. Juliana Prado", specialty: "Nutrologia", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                { name: "Dr. Marcos Rocha", specialty: "Fisioterapia", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                { name: "Dra. Beatriz Santos", specialty: "Oftalmologia", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                { name: "Dr. Tiago Mendes", specialty: "Urologia", img: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" }
-              ].map((doc, i) => (
+              {DOCTORS_DATA.map((doc, i) => (
                 <div 
                   className="marquee-item" 
                   key={i} 
@@ -418,6 +422,7 @@ export default function ImmersiveSection() {
                     transition: 'opacity 1.5s ease, transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), filter 1.5s ease'
                   }}
                   onMouseEnter={() => setActiveIndex(i)}
+                  onClick={() => setActiveProfessional(doc)}
                 >
                   {doc.name}
                 </div>
@@ -443,20 +448,7 @@ export default function ImmersiveSection() {
                   maskRepeat: 'no-repeat',
                   maskPosition: `0px calc(${activeIndex} * 65px)`,
                 }}>
-                  {[
-                    { name: "Dra. Sarah Johnson", specialty: "Neurologia", img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                    { name: "Dr. Michael Chen", specialty: "Oncologia", img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                    { name: "Dra. Elena Rodriguez", specialty: "Genética Forense", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                    { name: "Dr. Arthur Lima", specialty: "Cardiologia IA", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                    { name: "Dra. Letícia Costa", specialty: "Pediatria", img: "https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                    { name: "Dr. Roberto Silva", specialty: "Ortopedia 3D", img: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                    { name: "Dra. Camila Nunes", specialty: "Dermatologia", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                    { name: "Dr. Lucas Martins", specialty: "Psiquiatria", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                    { name: "Dra. Juliana Prado", specialty: "Nutrologia", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                    { name: "Dr. Marcos Rocha", specialty: "Fisioterapia", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                    { name: "Dra. Beatriz Santos", specialty: "Oftalmologia", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" },
-                    { name: "Dr. Tiago Mendes", specialty: "Urologia", img: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=facearea&facepad=3&q=80&w=150&h=150" }
-                  ].map((doc, i) => (
+                  {DOCTORS_DATA.map((doc, i) => (
                   <div className="marquee-row" key={i}>
                     <div className="marquee-inner">
                       <span>{doc.name}</span>
@@ -560,6 +552,11 @@ export default function ImmersiveSection() {
       >
         <FeatureModalContent featureKey={activeFeatureModal} />
       </GlassModal>
+
+      <ProfessionalCard 
+        doc={activeProfessional} 
+        onClose={() => setActiveProfessional(null)} 
+      />
     </>
   );
 }
