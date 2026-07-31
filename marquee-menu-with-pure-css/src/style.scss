@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  color: #222;
+  background-color: #ececec;
+  font-size: clamp(1rem, 2vw + 0.5rem, 2rem);
+  font-family: "Space Grotesk", sans-serif;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  --row-height: 80px;
+}
+
+.wrapper {
+  width: 500px;
+  margin: 48px 24px;
+  position: relative;
+
+  --total: 6;
+  @for $i from 1 through 6 {
+    &:has(.item:nth-child(#{$i}) input:checked) {
+      .marquee-list {
+        clip-path: polygon(
+          0 calc((#{$i - 1}) * 100% / var(--total)),
+          100% calc((#{$i - 1}) * 100% / var(--total)),
+          100% calc(#{$i} * 100% / var(--total)),
+          0 calc(#{$i} * 100% / var(--total))
+        );
+      }
+    }
+  }
+
+  .item {
+    position: relative;
+    height: var(--row-height);
+ 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    cursor: pointer;
+    
+    input {
+      display: none;
+    }
+    
+    &:after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-bottom: 1px solid;
+      z-index: 10;
+      pointer-events: none;
+    }
+  }
+}
+
+.marquee-list {
+  position: absolute;
+  inset: 0;
+
+  background-color: #fff;
+  mask: linear-gradient(90deg, transparent, #000 10% 90%, transparent);
+  pointer-events: none;
+
+  clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  transition: clip-path 0.3s;
+  will-change: clip-path;
+}
+
+.marquee-row {
+  overflow: hidden;
+  
+  img {
+    width: 150px;
+    aspect-ratio: 3;
+    border-radius: 99px;
+    object-fit: cover;
+  }
+}
+
+.marquee-inner {
+  height: var(--row-height);
+  width: max-content;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding-left: 48px;
+
+  animation: marquee linear 12s infinite;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}

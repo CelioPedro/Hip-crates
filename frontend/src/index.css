@@ -255,6 +255,10 @@ img {
   font-size: 14.5px;
   font-weight: 500;
   color: var(--text-2);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
   transition: background 0.25s, color 0.25s, transform 0.25s;
 }
 

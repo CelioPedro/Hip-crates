@@ -9,11 +9,15 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import ChatModal from './components/ChatModal';
 import ImmersiveSection from './components/ImmersiveSection';
+import GlassModal from './components/GlassModal';
+import SpecialtiesContent from './components/SpecialtiesContent';
+import AboutContent from './components/AboutContent';
 
 gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState(null);
   const lenisRef = useRef(null);
 
   // Sync GSAP ticker with Lenis
@@ -109,7 +113,10 @@ function App() {
           <div className="bg-text" aria-hidden="true">HIPÓCRATES</div>
         </div>
 
-        <Header onStart={() => setIsChatOpen(true)} />
+        <Header 
+          onStart={() => setIsChatOpen(true)} 
+          onOpenModal={(modalName) => setActiveModal(modalName)}
+        />
         
         <Hero onStart={() => setIsChatOpen(true)} />
 
@@ -131,6 +138,22 @@ function App() {
         </div>
 
         {isChatOpen && <ChatModal onClose={() => setIsChatOpen(false)} />}
+        
+        <GlassModal 
+          isOpen={activeModal === 'specialties'} 
+          onClose={() => setActiveModal(null)} 
+          title="Especialidades Hipócrates"
+        >
+          <SpecialtiesContent />
+        </GlassModal>
+
+        <GlassModal 
+          isOpen={activeModal === 'about'} 
+          onClose={() => setActiveModal(null)} 
+          title="Sobre o Hipócrates"
+        >
+          <AboutContent />
+        </GlassModal>
       </div>
     </ReactLenis>
   );

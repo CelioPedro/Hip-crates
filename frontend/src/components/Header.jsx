@@ -1,6 +1,6 @@
 import { Plus, CaretRight, ArrowRight, House, Article, Heartbeat } from "@phosphor-icons/react";
 
-export default function Header({ onStart }) {
+export default function Header({ onStart, onOpenModal }) {
   return (
     <header className="header" role="banner">
       <a className="logo" href="#" aria-label="Hipócrates Home">
@@ -12,14 +12,14 @@ export default function Header({ onStart }) {
           <House weight="bold" />
           Início
         </a>
-        <a className="nav-pill" href="#">
+        <button className="nav-pill" onClick={() => onOpenModal('specialties')}>
           <Heartbeat weight="bold" />
           Especialidades
-        </a>
-        <a className="nav-pill" href="#">
+        </button>
+        <button className="nav-pill" onClick={() => onOpenModal('about')}>
           <Article weight="bold" />
           Sobre
-        </a>
+        </button>
       </nav>
 
       <button className="header-cta" aria-label="Iniciar Triagem" onClick={onStart}>

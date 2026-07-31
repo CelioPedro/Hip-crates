@@ -1,0 +1,21 @@
+- const ITEMS = [
+-  { name: 'Vancouver', src: 'https://images.unsplash.com/photo-1731321680653-542179e90f02?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzQ2NzU2NTh8&ixlib=rb-4.1.0&q=80&w=400', },
+-  { name: 'Calgary', src: 'https://images.unsplash.com/photo-1563245091-eb11b28ffff4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzQ2NzUyNDd8&ixlib=rb-4.1.0&q=80&w=800', },
+-  { name: 'Ottawa', src: 'https://images.unsplash.com/photo-1626624659918-0908378a7001?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzQ2NzUyODF8&ixlib=rb-4.1.0&q=80&w=800', },
+-  { name: 'Montreal', src: 'https://images.unsplash.com/photo-1685681625665-b51add48cb50?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzQ2NzUzODh8&ixlib=rb-4.1.0&q=80&w=800', },
+-  { name: 'Toronto', src: 'https://images.unsplash.com/photo-1572548993480-049434a68ebf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzQ2NzU0NDV8&ixlib=rb-4.1.0&q=80&w=800', },
+-  { name: 'Halifax', src: 'https://images.unsplash.com/photo-1691345918991-d2308d908a3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzQ2NzU1MDN8&ixlib=rb-4.1.0&q=80&w=800', },
+- ]
+
+.wrapper 
+  each el, i in ITEMS
+    label.item= el.name
+      input(type='radio', name='city', value=el.name, checked=i===0)
+    
+  .marquee-list
+    each el in ITEMS
+      .marquee-row
+        .marquee-inner
+          each _ in Array.from({ length: 4 })
+            span= el.name
+            img(src=el.src, alt=el.name)
