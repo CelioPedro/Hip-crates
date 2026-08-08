@@ -7,6 +7,7 @@ import InteractiveBust from './InteractiveBust';
 import GlassModal from './GlassModal';
 import FeatureModalContent from './FeatureModalContent';
 import ProfessionalCard from './ProfessionalCard';
+import Header from './Header';
 import { ArrowCircleRight, DotsThree, TwitterLogo, FacebookLogo, InstagramLogo, Scan, ChartLineUp, Dna, Heartbeat, CaretUp, CaretDown } from "@phosphor-icons/react";
 import './MarqueeList.css';
 import { useLenis } from 'lenis/react';
@@ -28,7 +29,7 @@ const DOCTORS_DATA = [
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-export default function ImmersiveSection() {
+export default function ImmersiveSection({ onStart, onOpenModal }) {
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
   const descRef = useRef(null);
@@ -38,6 +39,9 @@ export default function ImmersiveSection() {
   const doctorClusterRef = useRef(null);
   const teamClusterRef = useRef(null);
   const socialRef = useRef(null);
+  const footerRef = useRef(null);
+  const headerRef = useRef(null);
+  const waveRef = useRef(null);
   const lenis = useLenis();
   const lenisInstanceRef = useRef(null);
   const scrollTimeoutRef = useRef(null);
@@ -91,205 +95,258 @@ export default function ImmersiveSection() {
   ];
 
   useGSAP(() => {
-    // 1. Typing effect timeline
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top top", // Trigger exactly when the section is fully framed and pinned
-      },
-      onStart: () => {
-        // Stop smooth scrolling while the typing effect happens
-        if (lenisInstanceRef.current) lenisInstanceRef.current.stop();
-      },
-      onComplete: () => {
-        // Resume smooth scrolling
-        if (lenisInstanceRef.current) lenisInstanceRef.current.start();
-        if (bustState.current) bustState.current.phase = "DONE"; 
-      }
-    });
+    let mm = gsap.matchMedia();
 
-    const titleChars = titleRef.current.querySelectorAll('.anim-char');
-    const descChars = descRef.current.querySelectorAll('.anim-char');
-
-    gsap.set([titleChars, descChars], { opacity: 0, y: 15, filter: "blur(4px)" });
-
-    const trackReading = function() {
-      bustState.current.phase = "READING"; 
-      const el = this.targets()[0];
-      if (el && el.getBoundingClientRect) {
-        const rect = el.getBoundingClientRect();
-        if (rect.width > 0) {
-          let nx = (rect.left + rect.width / 2) / window.innerWidth * 2 - 1;
-          let ny = -(rect.top + rect.height / 2) / window.innerHeight * 2 + 1;
-          nx = Math.max(-0.6, Math.min(0.6, nx));
-          ny = Math.max(-0.6, Math.min(0.6, ny));
-          bustState.current.simulatedX = nx;
-          bustState.current.simulatedY = ny;
+    // DESKTOP: Original Pinned Timeline
+    mm.add("(min-width: 801px)", () => {
+      // 1. Typing effect timeline
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top", // Trigger exactly when the section is fully framed and pinned
+        },
+        onStart: () => {
+          // Stop smooth scrolling while the typing effect happens
+          if (lenisInstanceRef.current) lenisInstanceRef.current.stop();
+        },
+        onComplete: () => {
+          // Resume smooth scrolling
+          if (lenisInstanceRef.current) lenisInstanceRef.current.start();
+          if (bustState.current) bustState.current.phase = "DONE"; 
         }
-      }
-    };
-
-    tl.to(titleChars, {
-      opacity: 1,
-      y: 0,
-      filter: "blur(0px)",
-      duration: 0.8, 
-      ease: "power2.out",
-      stagger: {
-        each: 0.05, 
-        onStart: trackReading
-      }
-    })
-    .to(descChars, {
-      opacity: 1,
-      y: 0,
-      filter: "blur(0px)",
-      duration: 0.8, 
-      ease: "power2.out",
-      stagger: {
-        each: 0.05, 
-        onStart: trackReading
-      }
-    });
-
-    // 2. Hipo Scroll Coreography (Descent)
-    const hipoTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top bottom", 
-        end: "top top", // Finishes exact at the pin point
-        scrub: true,
-      }
-    });
-
-    hipoTl.fromTo(bustRef.current, 
-      { yPercent: -42 }, 
-      { yPercent: 0, ease: "sine.inOut", force3D: true } 
-    );
-
-    // 2.5 Pin the giant background text simultaneously so it doesn't scroll away!
-    const bgTextElement = document.querySelector('.bg-text-wrapper');
-    if (bgTextElement) {
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top top",
-        end: "+=2500",
-        pin: bgTextElement,
-        pinSpacing: false // Prevent this pin from artificially extending the page height further!
       });
-    }
 
-    // 3. Master Pinned Timeline (Multi-stage Reveal Sequence)
-    const pinTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top top",
-        end: "+=600%", // Extends pin duration
-        pin: true,
-        scrub: 1,
+      const titleChars = titleRef.current.querySelectorAll('.anim-char');
+      const descChars = descRef.current.querySelectorAll('.anim-char');
+
+      gsap.set([titleChars, descChars], { opacity: 0, y: 15, filter: "blur(4px)" });
+
+      const trackReading = function() {
+        bustState.current.phase = "READING"; 
+        const el = this.targets()[0];
+        if (el && el.getBoundingClientRect) {
+          const rect = el.getBoundingClientRect();
+          if (rect.width > 0) {
+            let nx = (rect.left + rect.width / 2) / window.innerWidth * 2 - 1;
+            let ny = -(rect.top + rect.height / 2) / window.innerHeight * 2 + 1;
+            nx = Math.max(-0.6, Math.min(0.6, nx));
+            ny = Math.max(-0.6, Math.min(0.6, ny));
+            bustState.current.simulatedX = nx;
+            bustState.current.simulatedY = ny;
+          }
+        }
+      };
+
+      tl.to(titleChars, {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.8, 
+        ease: "power2.out",
+        stagger: {
+          each: 0.05, 
+          onStart: trackReading
+        }
+      })
+      .to(descChars, {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.8, 
+        ease: "power2.out",
+        stagger: {
+          each: 0.05, 
+          onStart: trackReading
+        }
+      });
+
+      // 2. Hipo Scroll Coreography (Descent)
+      const hipoTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom", 
+          end: "top top", // Finishes exact at the pin point
+          scrub: true,
+        }
+      });
+
+      hipoTl.fromTo(bustRef.current, 
+        { yPercent: -42 }, 
+        { yPercent: 0, ease: "sine.inOut", force3D: true } 
+      );
+
+      // 2.5 Pin the giant background text simultaneously so it doesn't scroll away!
+      const bgTextElement = document.querySelector('.bg-text-wrapper');
+      if (bgTextElement) {
+        ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "+=2500",
+          pin: bgTextElement,
+          pinSpacing: false // Prevent this pin from artificially extending the page height further!
+        });
       }
+
+      // 3. Master Pinned Timeline (Multi-stage Reveal Sequence)
+      const pinTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "+=600%", // Extends pin duration
+          pin: true,
+          scrub: 1,
+        }
+      });
+
+      const cards = cardsWrapperRef.current.querySelectorAll('.treatment');
+      const doctorCards = doctorClusterRef.current.querySelectorAll('.doctor-card, .info-card');
+      const marqueeList = teamClusterRef.current.querySelector('.marquee-list');
+      
+      // Set initial states
+      gsap.set([cardsWrapperRef.current, doctorClusterRef.current, teamClusterRef.current], { autoAlpha: 0 });
+      gsap.set(cards, { x: -40, filter: "blur(4px)" });
+      gsap.set(doctorCards, { scale: 0.9, y: 30, filter: "blur(8px)" });
+      gsap.set(marqueeList, { autoAlpha: 0 }); // Hide the white background initially
+      gsap.set(footerRef.current, { autoAlpha: 0, y: 15 });
+      gsap.set(headerRef.current, { autoAlpha: 0, y: -15 });
+      gsap.set(waveRef.current, { autoAlpha: 0, scale: 0.8, x: 50 });
+
+      pinTl
+        // PHASE 1: Pause slightly at the beginning
+        .to({}, { duration: 0.15 })
+        
+        // PHASE 2: Fade out introductory text
+        .to(textWrapperRef.current, {
+          autoAlpha: 0,
+          y: -30,
+          filter: "blur(8px)",
+          duration: 1,
+          ease: "power2.inOut"
+        })
+        
+        // PHASE 3: Fade in specialty cards
+        .to(cardsWrapperRef.current, { autoAlpha: 1, duration: 0.1 }, "-=0.6")
+        .to(cards, {
+          autoAlpha: 1,
+          x: 0,
+          filter: "blur(0px)",
+          duration: 1.2,
+          stagger: 0.2,
+          ease: "power2.out"
+        }, "-=0.5")
+        
+        // Keep cards on screen for a moment while scrolling
+        .to({}, { duration: 0.5 })
+        
+        // PHASE 4: Fade out specialty cards
+        .to(cards, {
+          autoAlpha: 0,
+          x: -40,
+          filter: "blur(4px)",
+          duration: 1,
+          stagger: 0.1,
+          ease: "power2.in"
+        })
+        .to(cardsWrapperRef.current, { autoAlpha: 0, duration: 0.1 })
+        
+        // PHASE 5: Fade in Doctor & Info cluster
+        .to(doctorClusterRef.current, { autoAlpha: 1, duration: 0.1 }, "-=0.4")
+        .to(doctorCards, {
+          autoAlpha: 1,
+          scale: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 1.2,
+          stagger: 0.15,
+          ease: "back.out(1.2)"
+        }, "-=0.3")
+        
+        // Phase 5b: Fade in Social Icons
+        .fromTo(socialRef.current.querySelectorAll('.social-btn'),
+          { autoAlpha: 0, y: 15 },
+          { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power2.out" },
+          "-=0.8"
+        )
+        
+        // PHASE 6: Fade out Doctor & Info cluster
+        .to({}, { duration: 0.5 }) // Wait before fading out
+        .to([doctorCards, socialRef.current.querySelectorAll('.social-btn')], {
+          autoAlpha: 0,
+          y: -30,
+          filter: "blur(8px)",
+          duration: 1,
+          stagger: 0.05,
+          ease: "power2.in"
+        })
+        .to(doctorClusterRef.current, { autoAlpha: 0, duration: 0.1 })
+
+        // PHASE 7: Appear Team Marquee Cluster instantly to avoid scroll hijacking conflicts
+        .to(teamClusterRef.current, { autoAlpha: 1, duration: 0.1 })
+        .to([footerRef.current, headerRef.current], { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" }, "<")
+        .to(waveRef.current, { autoAlpha: 0.75, scale: 1, x: 0, duration: 1.2, ease: "power2.out" }, "<")
+        .set(teamClusterRef.current.querySelectorAll('.marquee-item'), {
+          autoAlpha: 1,
+          y: 0,
+          filter: "blur(0px)"
+        })
+        .set(teamClusterRef.current.querySelector('.marquee-list'), {
+          autoAlpha: 1
+        })
+        .set(teamClusterRef.current.querySelectorAll('.marquee-indicator'), {
+          opacity: 0.6 // Indicator opacity is handled manually by React styles
+        })
+        // Add buffer so the section remains pinned for a bit while they interact with the marquee
+        .to({}, { duration: 1.5 });
     });
 
-    const cards = cardsWrapperRef.current.querySelectorAll('.treatment');
-    const doctorCards = doctorClusterRef.current.querySelectorAll('.doctor-card, .info-card');
-    const marqueeList = teamClusterRef.current.querySelector('.marquee-list');
-    
-    // Set initial states
-    gsap.set([cardsWrapperRef.current, doctorClusterRef.current, teamClusterRef.current], { autoAlpha: 0 });
-    gsap.set(cards, { x: -40, filter: "blur(4px)" });
-    gsap.set(doctorCards, { scale: 0.9, y: 30, filter: "blur(8px)" });
-    gsap.set(marqueeList, { autoAlpha: 0 }); // Hide the white background initially
+    // MOBILE: Touch-friendly layout
+    mm.add("(max-width: 800px)", () => {
+      if (bustState.current) bustState.current.phase = "DONE";
 
-    pinTl
-      // PHASE 1: Pause slightly at the beginning
-      .to({}, { duration: 0.15 })
-      
-      // PHASE 2: Fade out introductory text
-      .to(textWrapperRef.current, {
-        autoAlpha: 0,
-        y: -30,
-        filter: "blur(8px)",
-        duration: 1,
-        ease: "power2.inOut"
-      })
-      
-      // PHASE 3: Fade in specialty cards
-      .to(cardsWrapperRef.current, { autoAlpha: 1, duration: 0.1 }, "-=0.6")
-      .to(cards, {
-        autoAlpha: 1,
-        x: 0,
-        filter: "blur(0px)",
-        duration: 1.2,
-        stagger: 0.2,
-        ease: "power2.out"
-      }, "-=0.5")
-      
-      // Keep cards on screen for a moment while scrolling
-      .to({}, { duration: 0.5 })
-      
-      // PHASE 4: Fade out specialty cards
-      .to(cards, {
-        autoAlpha: 0,
-        x: -40,
-        filter: "blur(4px)",
-        duration: 1,
-        stagger: 0.1,
-        ease: "power2.in"
-      })
-      .to(cardsWrapperRef.current, { autoAlpha: 0, duration: 0.1 })
-      
-      // PHASE 5: Fade in Doctor & Info cluster
-      .to(doctorClusterRef.current, { autoAlpha: 1, duration: 0.1 }, "-=0.4")
-      .to(doctorCards, {
-        autoAlpha: 1,
-        scale: 1,
-        y: 0,
-        filter: "blur(0px)",
-        duration: 1.2,
-        stagger: 0.15,
-        ease: "back.out(1.2)"
-      }, "-=0.3")
-      
-      // Phase 5b: Fade in Social Icons
-      .fromTo(socialRef.current.querySelectorAll('.social-btn'),
-        { autoAlpha: 0, y: 15 },
-        { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power2.out" },
-        "-=0.8"
-      )
-      
-      // PHASE 6: Fade out Doctor & Info cluster
-      .to({}, { duration: 0.5 }) // Wait before fading out
-      .to([doctorCards, socialRef.current.querySelectorAll('.social-btn')], {
-        autoAlpha: 0,
-        y: -30,
-        filter: "blur(8px)",
-        duration: 1,
-        stagger: 0.05,
-        ease: "power2.in"
-      })
-      .to(doctorClusterRef.current, { autoAlpha: 0, duration: 0.1 })
+      // 1. Fade in text smoothly
+      const titleChars = titleRef.current.querySelectorAll('.anim-char');
+      const descChars = descRef.current.querySelectorAll('.anim-char');
+      gsap.fromTo([titleChars, descChars], 
+        { opacity: 0, y: 15 },
+        { 
+          opacity: 1, y: 0, duration: 0.8, ease: "power2.out", stagger: 0.02,
+          scrollTrigger: { trigger: sectionRef.current, start: "top 80%" }
+        }
+      );
 
-      // PHASE 7: Appear Team Marquee Cluster instantly to avoid scroll hijacking conflicts
-      .to(teamClusterRef.current, { autoAlpha: 1, duration: 0.1 })
-      .set(teamClusterRef.current.querySelectorAll('.marquee-item'), {
-        autoAlpha: 1,
-        y: 0,
-        filter: "blur(0px)"
-      })
-      .set(teamClusterRef.current.querySelector('.marquee-list'), {
-        autoAlpha: 1
-      })
-      .set(teamClusterRef.current.querySelectorAll('.marquee-indicator'), {
-        opacity: 0.6 // Indicator opacity is handled manually by React styles
-      })
-      // Add buffer so the section remains pinned for a bit while they interact with the marquee
-      .to({}, { duration: 1.5 });
+      // 2. Interactive Bust Entrance Animation
+      gsap.fromTo(bustRef.current,
+        { y: 150, opacity: 0, scale: 0.8, rotationX: 15 },
+        { 
+          y: 0, opacity: 1, scale: 1, rotationX: 0, 
+          duration: 1.5, ease: "back.out(1.2)",
+          scrollTrigger: { trigger: sectionRef.current, start: "top 60%" }
+        }
+      );
+
+      // 3. Reveal Cards naturally
+      gsap.set([textWrapperRef.current, cardsWrapperRef.current, doctorClusterRef.current, teamClusterRef.current], { autoAlpha: 1 });
+      const cards = cardsWrapperRef.current.querySelectorAll('.treatment');
+      const doctorCards = doctorClusterRef.current.querySelectorAll('.doctor-card, .info-card');
+      const marqueeList = teamClusterRef.current.querySelector('.marquee-list');
+      
+      gsap.set(cards, { x: 0, filter: "none", autoAlpha: 1 });
+      gsap.set(doctorCards, { scale: 1, y: 0, filter: "none", autoAlpha: 1 });
+      gsap.set(marqueeList, { autoAlpha: 1 });
+      
+      gsap.set(footerRef.current, { autoAlpha: 1, y: 0 });
+      gsap.set(headerRef.current, { autoAlpha: 1, y: 0 });
+      gsap.set(waveRef.current, { autoAlpha: 1, scale: 1, x: 0 });
+      
+      gsap.set(teamClusterRef.current.querySelectorAll('.marquee-item'), { autoAlpha: 1, y: 0, filter: "none" });
+    });
+
+    return () => mm.revert();
 
   }, { scope: sectionRef, dependencies: [] });
 
   return (
     <>
-      <div style={{ height: '25vh' }}></div>
       <section ref={sectionRef} className="immersive-section" style={{
         position: 'relative',
         width: '100%',
@@ -297,14 +354,62 @@ export default function ImmersiveSection() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '40px',
+        padding: '40px'
       }}>
       
+      {/* BLUE WAVE BACKGROUND - Appears in Phase 7 */}
+      <div ref={waveRef} style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 0, 
+        pointerEvents: 'none',
+        visibility: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute', bottom: '-20%', right: '-10%', width: '80%', aspectRatio: '1',
+          background: 'radial-gradient(closest-side, rgba(40, 190, 255, 0.25), transparent 70%)',
+          filter: 'blur(60px)', zIndex: 1
+        }}></div>
+        <img src="https://cdn.shopify.com/s/files/1/0185/5999/1872/files/blue_strand_transparent.png?v=1778949964" alt="Fluxo azul decorativo" style={{ 
+          position: 'absolute', bottom: '-15%', right: '-15%', width: '70vw', height: 'auto', 
+          zIndex: 2, transform: 'scaleX(-1) rotate(-15deg)', opacity: 0.8,
+          WebkitMaskImage: 'radial-gradient(60% 60% at 50% 50%, black 40%, transparent 100%)',
+          maskImage: 'radial-gradient(60% 60% at 50% 50%, black 40%, transparent 100%)'
+        }} />
+      </div>
+
+      {/* HEADER - Reusing the Home Header - Appears in Phase 7 */}
+      <div className="mobile-hide" ref={headerRef} style={{ 
+        position: 'absolute', top: '28px', left: 0, width: '100%', 
+        display: 'flex', justifyContent: 'center',
+        zIndex: 100, pointerEvents: 'auto', visibility: 'hidden'
+      }}>
+        <div style={{ width: '100%', maxWidth: '1360px', padding: '0 clamp(20px, 3vw, 40px)' }}>
+          <Header onStart={onStart} onOpenModal={onOpenModal} />
+        </div>
+      </div>
+
+      {/* FOOTER - Appears in Phase 7 */}
+      <footer ref={footerRef} style={{
+        position: 'absolute', bottom: 0, left: 0, width: '100%',
+        padding: '24px 40px', display: 'flex', justifyContent: 'center',
+        alignItems: 'center', zIndex: 100, pointerEvents: 'none',
+        borderTop: '1px solid rgba(0, 0, 0, 0.06)',
+        visibility: 'hidden'
+      }}>
+        <div style={{ color: 'var(--text-2)', fontSize: '0.85rem', fontWeight: 500, letterSpacing: '0.3px', opacity: 0.8 }}>
+          © 2024 Clínica Neuromed - Todos os direitos reservados. CNPJ: 00.000.000/0000-00.
+        </div>
+      </footer>
+
       {/* Content Container (Left Side) */}
-      <div style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: '500px', marginRight: 'auto', minHeight: '300px' }}>
+      <div className="immersive-left-container" style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: '500px', marginRight: 'auto', minHeight: '300px' }}>
         
         {/* Text Content */}
-        <div ref={textWrapperRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%', color: 'var(--text)' }}>
+        <div className="immersive-absolute-layer" ref={textWrapperRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%', color: 'var(--text)' }}>
           <h2 ref={titleRef} style={{ fontSize: '3rem', lineHeight: '1.1', marginBottom: '1rem', fontFamily: 'var(--font-display)', fontWeight: 700, minHeight: '3.3rem' }}>
             {"A Inteligência por trás do Cuidado".split(" ").map((word, wIndex) => (
               <span key={wIndex} style={{ display: 'inline-block', whiteSpace: 'nowrap', marginRight: '0.25em' }}>
@@ -326,7 +431,7 @@ export default function ImmersiveSection() {
         </div>
 
         {/* Cards Content */}
-        <div ref={cardsWrapperRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
+        <div className="immersive-absolute-layer" ref={cardsWrapperRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
           <div className="treatments">
             {specialties.map((item, index) => (
               <article 
@@ -350,7 +455,7 @@ export default function ImmersiveSection() {
         </div>
 
         {/* Doctor & Info Cluster (CEO / Diretor) */}
-        <div ref={doctorClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
+        <div className="immersive-absolute-layer" ref={doctorClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
           <div className="doctor-cluster" style={{ marginTop: 0 }}>
             <div className="clay-card doctor-card">
               <div className="doctor-avatar" aria-hidden="true">
@@ -385,7 +490,7 @@ export default function ImmersiveSection() {
         </div>
 
         {/* Team Cluster (Phase 7) - Marquee Hover UI */}
-        <div ref={teamClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
+        <div className="immersive-absolute-layer" ref={teamClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', right: '5%', width: '45%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           
           <div 
             className="marquee-scroll-area" 
