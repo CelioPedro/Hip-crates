@@ -134,8 +134,14 @@
 }
 
 @media (max-width: 768px) {
+  .glass-modal-overlay {
+    padding: 0;
+    align-items: flex-end; /* Snap to bottom like a bottom-sheet */
+  }
   .glass-modal-content {
-    border-radius: 16px;
+    border-radius: 24px 24px 0 0;
+    max-height: 95vh;
+    border-bottom: none;
   }
   .glass-modal-header {
     padding: 1.5rem;
