@@ -120,7 +120,10 @@ function App() {
         
         <Hero onStart={() => setIsChatOpen(true)} />
 
-        <ImmersiveSection />
+        <ImmersiveSection 
+          onStart={() => setIsChatOpen(true)} 
+          onOpenModal={(modalName) => setActiveModal(modalName)}
+        />
 
         {/* ─── GLOBAL SCROLL INDICATOR ─── */}
         <div className="global-scroll-badge" aria-hidden="true">
