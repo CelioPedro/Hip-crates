@@ -16,8 +16,36 @@ function BustModel({ bustState, ...props }) {
       mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
     };
+    
+    const handleTouchMove = (e) => {
+      if (e.touches.length > 0) {
+        mouse.current.x = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+        mouse.current.y = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
+      }
+    };
+
+    const handleDeviceOrientation = (e) => {
+      if (e.gamma !== null && e.beta !== null) {
+        // gamma: left-to-right tilt in degrees, where right is positive
+        const gamma = Math.max(-45, Math.min(45, e.gamma)); 
+        // beta: front-to-back tilt in degrees, where front is positive
+        const beta = Math.max(-45, Math.min(45, e.beta - 45)); 
+        
+        // Add smooth device orientation mapping
+        mouse.current.x = gamma / 45; 
+        mouse.current.y = -(beta / 45);
+      }
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('deviceorientation', handleDeviceOrientation, { passive: true });
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('deviceorientation', handleDeviceOrientation);
+    };
   }, []);
 
   useFrame((state) => {

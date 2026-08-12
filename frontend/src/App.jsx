@@ -31,57 +31,74 @@ function App() {
   }, []);
 
   useGSAP(() => {
-    // ─── INITIAL STATES ───
-    gsap.set(".header > *", { y: -20, opacity: 0 });
-    gsap.set(".eyebrow", { y: 12, opacity: 0 });
-    gsap.set(".title .word", { yPercent: 110, opacity: 0 });
-    gsap.set(".title-desc", { opacity: 0, x: -10 });
-    gsap.set(".paren-group .paren", { scale: 0, opacity: 0 });
-    gsap.set(".avatar-group", { scale: 0, opacity: 0 });
-    gsap.set(".dna-icon", { scale: 0, rotation: -45, opacity: 0 });
-    gsap.set(".future-tag", { opacity: 0, x: -10 });
-    gsap.set(".badge", { scale: 0, rotation: -90, opacity: 0 });
-    gsap.set(".wave-wrap", { x: 120, opacity: 0 });
-    gsap.set(".wave-glow", { opacity: 0 });
-    gsap.set(".bg-text", { opacity: 0, scale: 1.1 });
+    let mm = gsap.matchMedia();
 
-    // ─── PAGE LOAD TIMELINE ───
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.15 });
-    
-    tl.to(".header > *", { y: 0, opacity: 1, duration: 0.7, stagger: 0.07 })
-      .to(".wave-glow", { opacity: 1, duration: 1.2 }, "-=.5")
-      .to(".wave-wrap", { x: 0, opacity: 1, duration: 1.4, ease: "power3.out" }, "-=1.2")
-      .to(".bg-text", { opacity: 1, scale: 1, duration: 1.4, ease: "power3.out" }, "-=1.2")
-      .to(".eyebrow", { y: 0, opacity: 1, duration: 0.5 }, "-=1")
-      .to(".title .word", { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.05, ease: "power4.out" }, "-=.8")
-      .to(".title-desc", { x: 0, opacity: 1, duration: 0.6 }, "-=.5")
-      .to(".paren-group .paren", { scale: 1, opacity: 1, duration: 0.5, stagger: 0.1, ease: "back.out(2)" }, "-=.45")
-      .to(".avatar-group", { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=.3")
-      .to(".dna-icon", { scale: 1, rotation: 0, opacity: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=.4")
-      .to(".future-tag", { x: 0, opacity: 1, duration: 0.5 }, "-=.3")
-      .to(".badge", { scale: 1, rotation: 0, opacity: 1, duration: 0.8, ease: "back.out(1.7)" }, "-=.5");
+    mm.add("(min-width: 801px)", () => {
+      // ─── DESKTOP ANIMATIONS ───
+      gsap.set(".header > *", { y: -20, opacity: 0 });
+      gsap.set(".eyebrow.desktop-only", { y: 12, opacity: 0 });
+      gsap.set(".title.desktop-only .word", { yPercent: 110, opacity: 0 });
+      gsap.set(".title.desktop-only .title-desc", { opacity: 0, x: -10 });
+      gsap.set(".title.desktop-only .paren-group .paren", { scale: 0, opacity: 0 });
+      gsap.set(".title.desktop-only .avatar-group", { scale: 0, opacity: 0 });
+      gsap.set(".title.desktop-only .dna-icon", { scale: 0, rotation: -45, opacity: 0 });
+      gsap.set(".title.desktop-only .future-tag", { opacity: 0, x: -10 });
+      gsap.set(".badge.desktop-only", { scale: 0, rotation: -90, opacity: 0 });
+      gsap.set(".wave-wrap", { x: 120, opacity: 0 });
+      gsap.set(".wave-glow", { opacity: 0 });
+      gsap.set(".bg-text", { opacity: 0, scale: 1.1 });
 
-    // ─── WAVE FLOAT ───
-    gsap.to(".wave-wrap img", { y: -18, rotation: -1.2, duration: 5.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
-    gsap.to(".wave-glow", { y: 12, scale: 1.05, duration: 6, repeat: -1, yoyo: true, ease: "sine.inOut" });
-    gsap.to(".wave-glow.b", { y: -16, x: -10, duration: 7, repeat: -1, yoyo: true, ease: "sine.inOut" });
-    
-    // Badge drift & Icons (removed y drift from badge to avoid scroll conflict)
-    gsap.to(".dna-icon svg", { rotation: 12, duration: 4, repeat: -1, yoyo: true, ease: "sine.inOut", transformOrigin: "50% 50%" });
-    gsap.to(".avatar-group", { rotation: 3, duration: 3, repeat: -1, yoyo: true, ease: "sine.inOut" });
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.15 });
+      tl.to(".header > *", { y: 0, opacity: 1, duration: 0.7, stagger: 0.07 })
+        .to(".wave-glow", { opacity: 1, duration: 1.2 }, "-=.5")
+        .to(".wave-wrap", { x: 0, opacity: 1, duration: 1.4, ease: "power3.out" }, "-=1.2")
+        .to(".bg-text", { opacity: 1, scale: 1, duration: 1.4, ease: "power3.out" }, "-=1.2")
+        .to(".eyebrow.desktop-only", { y: 0, opacity: 1, duration: 0.5 }, "-=1")
+        .to(".title.desktop-only .word", { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.05, ease: "power4.out" }, "-=.8")
+        .to(".title.desktop-only .title-desc", { x: 0, opacity: 1, duration: 0.6 }, "-=.5")
+        .to(".title.desktop-only .paren-group .paren", { scale: 1, opacity: 1, duration: 0.5, stagger: 0.1, ease: "back.out(2)" }, "-=.45")
+        .to(".title.desktop-only .avatar-group", { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=.3")
+        .to(".title.desktop-only .dna-icon", { scale: 1, rotation: 0, opacity: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=.4")
+        .to(".title.desktop-only .future-tag", { x: 0, opacity: 1, duration: 0.5 }, "-=.3")
+        .to(".badge.desktop-only", { scale: 1, rotation: 0, opacity: 1, duration: 0.8, ease: "back.out(1.7)" }, "-=.5");
 
-    // ─── SCROLL PARALLAX ───
-    gsap.to(".wave-wrap", {
-      scrollTrigger: { trigger: "body", start: "top top", end: "+=1200", scrub: 1.2 },
-      y: -240, rotation: 6, scale: 1.08
+      gsap.to(".wave-wrap", { scrollTrigger: { trigger: "body", start: "top top", end: "+=1200", scrub: 1.2 }, y: -240, rotation: 6, scale: 1.08 });
+      gsap.to(".bg-text", { scrollTrigger: { trigger: "body", start: "top top", end: "+=1000", scrub: 1.2 }, xPercent: -8, opacity: 0.5 });
+      gsap.to(".badge.desktop-only", { scrollTrigger: { trigger: "body", start: "top top", end: "+=800", scrub: 1.5 }, y: 80 });
     });
-    gsap.to(".bg-text", {
-      scrollTrigger: { trigger: "body", start: "top top", end: "+=1000", scrub: 1.2 },
-      xPercent: -8, opacity: 0.5
-    });
-    gsap.to(".badge", {
-      scrollTrigger: { trigger: "body", start: "top top", end: "+=800", scrub: 1.5 },
-      y: 80
+
+    mm.add("(max-width: 800px)", () => {
+      // ─── MOBILE ANIMATIONS ───
+      gsap.set(".header > *", { y: -10, opacity: 0 }); 
+      gsap.set(".mobile-hero-layout .eyebrow", { y: 12, opacity: 0 });
+      gsap.set(".mobile-hero-layout .title .word", { yPercent: 110, opacity: 0 });
+      gsap.set(".mobile-hero-layout .title-desc", { opacity: 0, x: -10 });
+      gsap.set(".mobile-hero-layout .paren-group .paren", { scale: 0, opacity: 0 });
+      gsap.set(".mobile-hero-layout .avatar-group", { scale: 0, opacity: 0 });
+      gsap.set(".mobile-hero-layout .dna-icon", { scale: 0, rotation: -45, opacity: 0 });
+      gsap.set(".mobile-hero-layout .future-tag", { opacity: 0, x: -10 });
+      gsap.set(".mobile-hero-layout .mobile-badge", { scale: 0, rotation: -90, opacity: 0 });
+      gsap.set(".wave-wrap", { x: 60, opacity: 0 }); 
+      gsap.set(".wave-glow", { opacity: 0 });
+      gsap.set(".bg-text", { opacity: 0, scale: 1.02 });
+
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.1 });
+      tl.to(".header > *", { y: 0, opacity: 1, duration: 0.5, stagger: 0.05 })
+        .to(".wave-glow", { opacity: 1, duration: 1 }, "-=.4")
+        .to(".wave-wrap", { x: 0, opacity: 1, duration: 1, ease: "power2.out" }, "-=.8")
+        .to(".bg-text", { opacity: 0.5, scale: 1, duration: 1 }, "-=.8")
+        .to(".mobile-hero-layout .title .word", { yPercent: 0, opacity: 1, duration: 0.7, stagger: 0.05, ease: "power4.out" }, "-=.6")
+        .to(".mobile-hero-layout .paren-group .paren", { scale: 1, opacity: 1, duration: 0.4, stagger: 0.1, ease: "back.out(2)" }, "-=.5")
+        .to(".mobile-hero-layout .avatar-group", { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" }, "-=.3")
+        .to(".mobile-hero-layout .dna-icon", { scale: 1, rotation: 0, opacity: 1, duration: 0.5, ease: "back.out(1.7)" }, "-=.4")
+        .to(".mobile-hero-layout .title-desc", { x: 0, opacity: 1, duration: 0.5 }, "-=.3")
+        .to(".mobile-hero-layout .mobile-badge", { scale: 1, rotation: 0, opacity: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=.2")
+        .to(".mobile-hero-layout .eyebrow", { y: 0, opacity: 1, duration: 0.5 }, "-=.4")
+        .to(".mobile-hero-layout .future-tag", { x: 0, opacity: 1, duration: 0.4 }, "-=.3");
+
+      gsap.to(".wave-wrap", { scrollTrigger: { trigger: "body", start: "top top", end: "+=800", scrub: 1 }, y: -80, rotation: 20 });
+      gsap.to(".bg-text", { scrollTrigger: { trigger: "body", start: "top top", end: "+=600", scrub: 1 }, y: 50 });
+      gsap.to(".mobile-hero-layout .mobile-badge", { scrollTrigger: { trigger: "body", start: "top top", end: "+=600", scrub: 1 }, y: 40 });
     });
 
     // Global scroll badge visibility (appears from second section onwards)

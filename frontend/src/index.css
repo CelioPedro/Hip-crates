@@ -1105,8 +1105,33 @@ img {
     width: 100%;
     z-index: 2;
     position: relative;
-    padding-top: 100px; /* Space for the glass pill header */
-    padding-bottom: 20vh; /* Space for the 3D Bust at the bottom */
+    padding-top: 60px; /* Reduced to bring content closer to the pill header */
+    padding-bottom: 40px; /* Normal spacing */
+  }
+
+  .hero-phases-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    width: 100%;
+  }
+
+  .hero-phase {
+    grid-column: 1;
+    grid-row: 1;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(15px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-phase.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
   }
 
   .hero {
@@ -1116,59 +1141,89 @@ img {
   }
   
   .mobile-hero-layout .title {
-    font-size: 3.5rem;
-    line-height: 1;
-    margin-bottom: 12px;
+    font-size: 16vw;
+    line-height: 1.05;
+    margin-bottom: 8px;
   }
   
   .mobile-hero-layout .word {
-    font-size: 3.5rem !important; 
-    line-height: 1;
+    font-size: 16vw !important; 
+    line-height: 1.05;
+  }
+
+  .mobile-hero-layout .title-line-3 {
+    margin-top: 12px;
+  }
+
+  .mobile-hero-layout .paren-group {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    transform: scale(1.1);
+    transform-origin: left center;
   }
   
+  .mobile-hero-layout .title-bottom .title-line:nth-child(1) .word {
+    font-size: 10.5vw !important; /* REDEFININDO */
+  }
+  
+  .mobile-hero-layout .title-bottom .title-line:nth-child(2) .word {
+    font-size: 16vw !important; /* A SAÚDE */
+  }
+
   .mobile-hero-layout .title-desc {
-    width: 90%;
-    max-width: 320px;
+    width: 95%;
+    max-width: 340px;
     font-size: 16px;
-    margin-bottom: 24px;
-    color: var(--mute);
-    line-height: 1.4;
+    margin-top: 24px;
+    margin-bottom: 20px;
+    color: var(--text-2);
+    line-height: 1.45;
   }
   
   .mobile-hero-layout .mobile-badge {
     display: flex !important;
     position: relative;
-    width: 100px;
-    height: 100px;
-    margin-bottom: 32px;
+    width: 110px;
+    height: 110px;
+    margin-left: 20px;
+    margin-bottom: 40px;
+    margin-top: 10px;
   }
   
   .mobile-hero-layout .eyebrow {
-    margin-bottom: 16px;
-    font-size: 13px;
+    margin-bottom: 12px;
+    font-size: 14px;
   }
 
   .mobile-hero-layout .title-bottom {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
   
   .mobile-hero-layout .future-tag {
     display: block;
     width: 100%;
+    font-size: 15px;
   }
   
   /* The background text HIPPOCRATES should be lower */
   .bg-text {
-    font-size: clamp(60px, 15vw, 150px); 
-    letter-spacing: -2px;
-    bottom: -10vh !important; /* Move text down */
+    font-size: clamp(60px, 18vw, 150px); 
+    letter-spacing: -1px;
+    bottom: -8vh !important; /* Move text down */
+    opacity: 0.5; /* slightly more visible */
   }
 
   .wave-wrap {
-    inset: -20px -80px auto auto !important;
-    width: 180vw !important; /* Expand to flow down the side */
-    transform: translateY(-50px) translateX(30%) rotate(10deg);
-    opacity: 0.8;
+    inset: -50px -100px auto auto !important;
+    width: 220vw !important; /* Expand to cross the screen */
+    transform: translateY(60px) translateX(25%) rotate(15deg);
+    opacity: 0.9;
+  }
+
+  .global-scroll-badge {
+    display: none !important;
   }
 }
 
@@ -1179,10 +1234,10 @@ img {
   .immersive-section {
     flex-direction: column !important;
     justify-content: flex-start !important;
-    padding: 0 !important;
+    padding: 40px 0 !important;
     min-height: auto !important;
     overflow-x: hidden;
-    margin-top: -35vh; /* Pull the entire section up so the bust sits inside the Hero viewport! */
+    margin-top: 0 !important; /* FIXED: Removed destructive -35vh */
     position: relative;
     z-index: 10;
   }
@@ -1201,6 +1256,8 @@ img {
     position: relative !important;
     top: auto !important;
     left: auto !important;
+    right: auto !important;
+    width: 100% !important;
     transform: none !important;
     padding: 0 20px;
     height: auto !important;
@@ -1233,19 +1290,42 @@ img {
   /* BUST 3D on mobile */
   .bust-anim-wrapper {
     position: relative !important;
-    height: 40vh !important; /* Make it a bit smaller so it sits perfectly in the corner */
+    height: 50vh !important; /* Normal height in document flow */
     margin-bottom: 20px; 
     z-index: 1 !important;
-    order: -1; /* PUSH BUST TO THE TOP OF IMMERSIVE SECTION! */
-    pointer-events: none; /* Make wrapper click-through */
+    order: 0; /* Normal flex order */
+    pointer-events: none;
   }
   .bust-anim-wrapper > div {
-    right: -20% !important; /* Push it to the right edge */
-    width: 90% !important;
-    bottom: -10vh !important; /* Anchor it to the bottom */
+    right: 0 !important;
+    width: 100% !important;
+    bottom: 0 !important;
     top: auto !important;
-    height: 120% !important;
-    pointer-events: auto; /* Re-enable clicks on the bust itself */
+    height: 100% !important;
+    pointer-events: auto;
+  }
+  .team-cluster-mobile {
+    padding-bottom: 40px;
+  }
+  .doctor-cluster {
+    margin-bottom: 40px !important;
+  }
+  .marquee-horizontal-mask,
+  .marquee-indicator {
+    display: none !important;
+  }
+  .marquee-scroll-area {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .marquee-item {
+    font-size: 24px !important;
+    padding: 12px 0 !important;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
 }
 
@@ -1274,27 +1354,38 @@ img {
     justify-content: center;
   }
   .header {
+    margin: 8px 12px !important;
+    width: calc(100% - 24px) !important;
     padding: 8px 16px !important;
     gap: 8px !important;
-    background: rgba(255, 255, 255, 0.8) !important;
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    border-radius: 99px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
   }
   .header .logo {
     padding: 0 !important;
   }
   .header .logo img {
-    height: 40px !important;
+    height: 38px !important;
   }
   .header-cta {
     display: flex !important;
     flex: 1;
     justify-content: center;
-    max-width: 200px;
+    max-width: 170px;
     margin: 0 auto;
     padding: 6px 12px !important;
+    background: white !important;
+    color: var(--text) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
   }
   .header-cta .cta-text {
     display: block !important;
     font-size: 13px !important;
+    font-weight: 500 !important;
   }
   .header-cta .cta-dot {
     width: 24px !important;
