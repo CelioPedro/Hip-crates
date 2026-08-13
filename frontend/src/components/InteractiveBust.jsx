@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, Environment, Float, Center } from '@react-three/drei';
+import { useGLTF, Environment, Float, Center, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
 function BustModel({ bustState, ...props }) {
@@ -52,7 +52,7 @@ function BustModel({ bustState, ...props }) {
     let targetX, targetY;
 
     if (bustState && bustState.current) {
-      if (bustState.current.phase === "START") {
+      if (bustState.current.phase === "START" || window.innerWidth <= 800) {
         // Look further up and slightly more left towards the logo
         targetX = -Math.PI / 5.5; 
         targetY = Math.PI / 6; // Increased from PI/12 to PI/6 for a more pronounced upward gaze
@@ -106,7 +106,9 @@ export default function InteractiveBust({ bustState }) {
         >
           {/* Re-centered with a slight downward bias and slightly reduced scale to ensure no clipping on top or bottom! */}
           <Center position={[0, -0.4, 0]}>
-            <BustModel scale={0.042} bustState={bustState} />
+            <React.Suspense fallback={<Html center><div className="loading-spinner" style={{ color: 'white', whiteSpace: 'nowrap' }}>Carregando IA...</div></Html>}>
+              <BustModel scale={0.042} bustState={bustState} />
+            </React.Suspense>
           </Center>
         </Float>
     </Canvas>

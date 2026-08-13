@@ -314,16 +314,6 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
         }
       );
 
-      // 2. Interactive Bust Entrance Animation
-      gsap.fromTo(bustRef.current,
-        { y: 150, opacity: 0, scale: 0.8, rotationX: 15 },
-        { 
-          y: 0, opacity: 1, scale: 1, rotationX: 0, 
-          duration: 1.5, ease: "back.out(1.2)",
-          scrollTrigger: { trigger: sectionRef.current, start: "top 60%" }
-        }
-      );
-
       // 3. Reveal Cards naturally
       gsap.set([textWrapperRef.current, cardsWrapperRef.current, doctorClusterRef.current, teamClusterRef.current], { autoAlpha: 1 });
       const cards = cardsWrapperRef.current.querySelectorAll('.treatment');

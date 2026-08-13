@@ -1236,7 +1236,7 @@ img {
     justify-content: flex-start !important;
     padding: 40px 0 !important;
     min-height: auto !important;
-    overflow-x: hidden;
+    overflow: visible !important; /* Allow the bust to overflow visually into the hero */
     margin-top: 0 !important; /* FIXED: Removed destructive -35vh */
     position: relative;
     z-index: 10;
@@ -1287,14 +1287,20 @@ img {
     margin-bottom: 0 !important; /* Override desktop stacking */
   }
   
-  /* BUST 3D on mobile */
+  /* BUST 3D on mobile - Coloca o busto na Hero */
   .bust-anim-wrapper {
-    position: relative !important;
-    height: 50vh !important; /* Normal height in document flow */
-    margin-bottom: 20px; 
-    z-index: 1 !important;
-    order: 0; /* Normal flex order */
+    position: absolute !important;
+    bottom: 100% !important; /* Encaixa em cima da seção imersiva (dentro da Hero) */
+    top: auto !important;
+    left: auto !important;
+    right: -15% !important; /* Mais para a direita */
+    width: clamp(280px, 80vw, 400px) !important; /* Largura adaptável com limites */
+    height: clamp(350px, 115vw, 480px) !important; /* Usa 'vw' em vez de 'dvh' para blindar contra a barra de endereço */
+    min-height: auto !important;
+    z-index: 10 !important;
+    order: 0;
     pointer-events: none;
+    transform: translateY(40px) scale(1.15); /* Posição e escala finais fixas */
   }
   .bust-anim-wrapper > div {
     right: 0 !important;
@@ -1302,7 +1308,10 @@ img {
     bottom: 0 !important;
     top: auto !important;
     height: 100% !important;
-    pointer-events: auto;
+    pointer-events: auto !important;
+    /* Camufla o "corte" reto da base do busto com um degradê agressivo longo */
+    -webkit-mask-image: linear-gradient(to bottom, black 65%, transparent 95%);
+    mask-image: linear-gradient(to bottom, black 65%, transparent 95%);
   }
   .team-cluster-mobile {
     padding-bottom: 40px;
