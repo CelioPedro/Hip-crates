@@ -27,7 +27,7 @@ export default function AboutContent() {
       </div>
       
       <div className="about-footer">
-        <img src="/Logo01.svg" alt="Hipócrates Logo" className="about-footer-logo" />
+        <img src={`${import.meta.env.BASE_URL}Logo01.svg`} alt="Hipócrates Logo" className="about-footer-logo" />
         <span>V 2.0.4 — Sistema Operacional Clínico</span>
       </div>
     </div>

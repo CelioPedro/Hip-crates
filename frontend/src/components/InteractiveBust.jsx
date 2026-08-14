@@ -6,7 +6,7 @@ import * as THREE from 'three';
 function BustModel({ bustState, ...props }) {
   const group = useRef();
   // We use the primitive object to load whatever is in the scene
-  const { scene } = useGLTF('/models/hipo.glb');
+  const { scene } = useGLTF(`${import.meta.env.BASE_URL}models/hipo.glb`);
 
   const mouse = useRef({ x: 0, y: 0 });
 
@@ -115,4 +115,4 @@ export default function InteractiveBust({ bustState }) {
   );
 }
 
-useGLTF.preload('/models/hipo.glb');
+useGLTF.preload(`${import.meta.env.BASE_URL}models/hipo.glb`);

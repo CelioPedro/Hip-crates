@@ -8,7 +8,7 @@ export default function Header({ onStart, onOpenModal }) {
     <>
       <header className="header" role="banner">
         <a className="logo" href="#" aria-label="Hipócrates Home">
-          <img src="/Logo01.svg" alt="Hipócrates Logo" style={{ height: '60px', width: 'auto' }} />
+          <img src={`${import.meta.env.BASE_URL}Logo01.svg`} alt="Hipócrates Logo" style={{ height: '60px', width: 'auto' }} />
         </a>
 
         {/* Desktop Nav */}

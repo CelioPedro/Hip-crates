@@ -31,7 +31,7 @@ export default function Hero({ onStart }) {
               <img src="https://i.pravatar.cc/100?img=12" alt="User 3" />
             </span>
             <span className="icon-tile dna-icon">
-              <img src="/favmed.svg" alt="Favmed Icon" style={{ width: '25px', height: '25px', objectFit: 'contain', zIndex: 1, position: 'relative' }} />
+              <img src={`${import.meta.env.BASE_URL}favmed.svg`} alt="Favmed Icon" style={{ width: '25px', height: '25px', objectFit: 'contain', zIndex: 1, position: 'relative' }} />
             </span>
             <span className="paren">)</span>
           </span>
@@ -58,7 +58,7 @@ export default function Hero({ onStart }) {
           </text>
         </svg>
         <span className="badge-center">
-          <img src="/favmed.svg" alt="Favmed Icon" />
+          <img src={`${import.meta.env.BASE_URL}favmed.svg`} alt="Favmed Icon" />
         </span>
       </div>
 
@@ -84,7 +84,7 @@ export default function Hero({ onStart }) {
                     <img src="https://i.pravatar.cc/100?img=12" alt="User 3" />
                   </span>
                   <span className="icon-tile dna-icon">
-                    <img src="/favmed.svg" alt="Favmed Icon" style={{ width: '25px', height: '25px', objectFit: 'contain', zIndex: 1, position: 'relative' }} />
+                    <img src={`${import.meta.env.BASE_URL}favmed.svg`} alt="Favmed Icon" style={{ width: '25px', height: '25px', objectFit: 'contain', zIndex: 1, position: 'relative' }} />
                   </span>
                   <span className="paren">)</span>
                 </span>
@@ -127,7 +127,7 @@ export default function Hero({ onStart }) {
             </text>
           </svg>
           <span className="badge-center">
-            <img src="/favmed.svg" alt="Favmed Icon" />
+            <img src={`${import.meta.env.BASE_URL}favmed.svg`} alt="Favmed Icon" />
           </span>
         </div>
 

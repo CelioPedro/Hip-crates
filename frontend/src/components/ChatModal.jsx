@@ -63,7 +63,7 @@ export default function ChatModal({ onClose }) {
         <div className="chat-header">
           <div className="bot-info">
             <div className="bot-avatar">
-              <img src="/Logo01.svg" alt="Hipócrates.IA Logo" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
+              <img src={`${import.meta.env.BASE_URL}Logo01.svg`} alt="Hipócrates.IA Logo" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
             </div>
             <div>
               <h3>Triagem Inteligente</h3>
