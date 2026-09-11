@@ -1105,8 +1105,8 @@ img {
     width: 100%;
     z-index: 2;
     position: relative;
-    padding-top: 60px; /* Reduced to bring content closer to the pill header */
-    padding-bottom: 40px; /* Normal spacing */
+    padding-top: 100px; /* Space for the glass pill header */
+    padding-bottom: 5vh; /* Reduced space for the 3D Bust at the bottom to pull it up */
   }
 
   .hero-phases-container {
@@ -1136,7 +1136,7 @@ img {
 
   .hero {
     padding-top: 0 !important;
-    min-height: 80vh;
+    min-height: 65vh;
     justify-content: flex-start; 
   }
   
