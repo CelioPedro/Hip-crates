@@ -123,7 +123,7 @@ function App() {
         <div className="wave-glow"></div>
         <div className="wave-glow b"></div>
         <div className="wave-wrap" id="wave">
-          <img src="https://cdn.shopify.com/s/files/1/0185/5999/1872/files/blue_strand_transparent.png?v=1778949964" alt="Fluxo de dados azul" />
+          <img src={`${import.meta.env.BASE_URL}wave.webp`} alt="Fluxo de dados azul" />
         </div>
 
         <div className="bg-text-wrapper" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}>
