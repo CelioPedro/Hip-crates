@@ -106,7 +106,7 @@ export default function InteractiveBust({ bustState }) {
         >
           {/* Re-centered with a slight downward bias and slightly reduced scale to ensure no clipping on top or bottom! */}
           <Center position={[0, -0.4, 0]}>
-            <React.Suspense fallback={<Html center><div className="loading-spinner" style={{ color: 'white', whiteSpace: 'nowrap' }}>Carregando IA...</div></Html>}>
+            <React.Suspense fallback={null}>
               <BustModel scale={0.042} bustState={bustState} />
             </React.Suspense>
           </Center>

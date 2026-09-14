@@ -26,7 +26,9 @@ function App() {
 
   useEffect(() => {
     if (progress === 100) {
-      const t = setTimeout(() => setIsLoaded(true), 200);
+      // 1.5s delay to allow WebGL shader compilation and GPU buffer uploads to finish
+      // behind the loading screen, preventing GSAP stutters when the animation starts.
+      const t = setTimeout(() => setIsLoaded(true), 1500);
       return () => clearTimeout(t);
     }
   }, [progress]);
