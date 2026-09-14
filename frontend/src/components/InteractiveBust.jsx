@@ -92,7 +92,7 @@ function BustModel({ bustState, ...props }) {
 export default function InteractiveBust({ bustState }) {
   return (
     <Canvas 
-      dpr={typeof window !== 'undefined' && window.innerWidth <= 800 ? [1, 1] : [1, 2]}
+      dpr={[1, 2]}
       camera={{ position: [0, 0, 10], fov: 45 }}
       style={{ width: '100%', height: '100%', pointerEvents: 'auto' }} 
     >
