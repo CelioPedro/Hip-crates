@@ -1275,8 +1275,10 @@ img {
   /* Mobile Mega Carousel wrapper */
   .mobile-mega-carousel-wrapper {
     display: block !important;
-    position: relative;
-    width: 100%;
+    position: relative !important;
+    width: 100% !important;
+    padding: 0 20px;
+    margin-bottom: 30px;
   }
 
   .mobile-mega-carousel {
@@ -1312,8 +1314,8 @@ img {
   .mobile-mega-carousel .treatment,
   .mobile-mega-carousel .doctor-card,
   .mobile-mega-carousel .info-card {
-    flex: 0 0 72% !important;
-    max-width: 72% !important;
+    flex: 0 0 85% !important;
+    max-width: 85% !important;
     scroll-snap-align: center;
     margin: 0 !important;
     height: auto !important;
