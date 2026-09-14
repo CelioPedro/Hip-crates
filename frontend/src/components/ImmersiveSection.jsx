@@ -411,7 +411,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
           </h2>
           <p ref={descRef} style={{ fontSize: '1.1rem', color: 'var(--text-2)', lineHeight: '1.5', minHeight: '5rem' }}>
             {"Explore o nosso modelo preditivo interativo. Rotacione e veja como a IA analisa dados complexos em tempo real para conectar você ao especialista correto.".split(" ").map((word, wIndex) => (
-              <span key={wIndex} style={{ display: 'inline-block', whiteSpace: 'nowrap', marginRight: '0.25em' }}>
+              <span key={wIndex} className={wIndex === 6 || wIndex === 7 ? "mobile-hide" : ""} style={{ display: 'inline-block', whiteSpace: 'nowrap', marginRight: '0.25em' }}>
                 {word.split("").map((char, cIndex) => (
                   <span key={`${wIndex}-${cIndex}`} className="anim-char" style={{ display: 'inline-block' }}>{char}</span>
                 ))}
