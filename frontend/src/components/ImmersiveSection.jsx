@@ -47,10 +47,6 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
   const rightIndicatorRef = useRef(null);
   const carouselRef = useRef(null);
 
-  const docLeftIndicatorRef = useRef(null);
-  const docRightIndicatorRef = useRef(null);
-  const docCarouselRef = useRef(null);
-
   const lenis = useLenis();
   const lenisInstanceRef = useRef(null);
   const scrollTimeoutRef = useRef(null);
@@ -101,20 +97,12 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
   };
 
   const handleCarouselScroll = (e) => handleGenericScroll(e, leftIndicatorRef, rightIndicatorRef);
-  const handleDocCarouselScroll = (e) => handleGenericScroll(e, docLeftIndicatorRef, docRightIndicatorRef);
 
   const handleNextCard = () => {
     if (carouselRef.current) carouselRef.current.scrollBy({ left: carouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
   };
   const handlePrevCard = () => {
     if (carouselRef.current) carouselRef.current.scrollBy({ left: -carouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
-  };
-
-  const handleDocNextCard = () => {
-    if (docCarouselRef.current) docCarouselRef.current.scrollBy({ left: docCarouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
-  };
-  const handleDocPrevCard = () => {
-    if (docCarouselRef.current) docCarouselRef.current.scrollBy({ left: -docCarouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
   };
 
   const handleMarqueeScroll = (e) => {
@@ -503,16 +491,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
         {/* Doctor & Info Cluster (CEO / Diretor) */}
         <div className="immersive-absolute-layer" ref={doctorClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
           
-          <div 
-            className="mobile-scroll-indicator left" 
-            ref={docLeftIndicatorRef} 
-            onClick={handleDocPrevCard}
-            style={{ transition: 'opacity 0.3s ease, visibility 0.3s ease', opacity: 0, visibility: 'hidden' }}
-          >
-            <CaretLeft weight="bold" />
-          </div>
-
-          <div className="doctor-cluster" ref={docCarouselRef} onScroll={handleDocCarouselScroll} style={{ marginTop: 0 }}>
+          <div className="doctor-cluster" style={{ marginTop: 0 }}>
             <div className="clay-card doctor-card">
               <div className="doctor-avatar" aria-hidden="true">
                 <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150" alt="Médica" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -543,15 +522,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
               </div>
             </div>
           </div>
-
-          <div 
-            className="mobile-scroll-indicator right" 
-            ref={docRightIndicatorRef} 
-            onClick={handleDocNextCard}
-            style={{ transition: 'opacity 0.3s ease, visibility 0.3s ease' }}
-          >
-            <CaretRight weight="bold" />
-          </div>
+          
         </div>
 
         {/* Team Cluster (Phase 7) - Marquee Hover UI */}

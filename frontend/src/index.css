@@ -1269,7 +1269,7 @@ img {
     visibility: visible !important;
   }
   /* Horizontal swipe carousel for cards */
-  .treatments, .doctor-cluster {
+  .treatments {
     display: flex;
     flex-direction: row;
     overflow-x: auto;
@@ -1286,17 +1286,30 @@ img {
     mask-image: linear-gradient(to right, black 85%, transparent 100%);
     transition: mask-image 0.3s ease, -webkit-mask-image 0.3s ease;
   }
-  .treatments::-webkit-scrollbar, .doctor-cluster::-webkit-scrollbar {
+  .treatments::-webkit-scrollbar {
     display: none;
   }
-  .treatments > *, .doctor-cluster > *, .info-grid > * {
+  .treatments > * {
     flex: 0 0 85%;
     scroll-snap-align: center;
     margin-bottom: 0 !important; /* Override desktop stacking */
   }
 
+  /* Compact Dashboard style for Doctor section */
   .info-grid {
-    display: contents;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px;
+  }
+  .info-card {
+    padding: 14px 12px !important;
+  }
+  .info-card .ic-head {
+    font-size: 13px !important;
+  }
+  .info-card p {
+    font-size: 12px !important;
+    margin-top: 8px !important;
   }
 
   .treatment.clay-card, .doctor-card, .info-card {
