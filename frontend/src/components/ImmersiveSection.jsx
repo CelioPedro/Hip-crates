@@ -55,14 +55,26 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
   const [activeProfessional, setActiveProfessional] = useState(null);
 
   const handleCarouselScroll = (e) => {
-    if (!indicatorRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = e.currentTarget;
-    if (scrollLeft + clientWidth >= scrollWidth - 15) {
-      indicatorRef.current.style.opacity = '0';
-      indicatorRef.current.style.visibility = 'hidden';
+    const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 15;
+    
+    if (indicatorRef.current) {
+      if (isAtEnd) {
+        indicatorRef.current.style.opacity = '0';
+        indicatorRef.current.style.visibility = 'hidden';
+      } else {
+        indicatorRef.current.style.opacity = '0.9';
+        indicatorRef.current.style.visibility = 'visible';
+      }
+    }
+
+    // Also toggle the CSS mask so the last card isn't cut off when fully scrolled
+    if (isAtEnd) {
+      e.currentTarget.style.maskImage = 'none';
+      e.currentTarget.style.webkitMaskImage = 'none';
     } else {
-      indicatorRef.current.style.opacity = '0.9';
-      indicatorRef.current.style.visibility = 'visible';
+      e.currentTarget.style.maskImage = 'linear-gradient(to right, black 85%, transparent 100%)';
+      e.currentTarget.style.webkitMaskImage = 'linear-gradient(to right, black 85%, transparent 100%)';
     }
   };
 

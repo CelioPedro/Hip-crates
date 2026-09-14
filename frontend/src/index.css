@@ -1282,6 +1282,9 @@ img {
     /* Hide scrollbar for cleaner look */
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    transition: mask-image 0.3s ease, -webkit-mask-image 0.3s ease;
   }
   .treatments::-webkit-scrollbar {
     display: none;
@@ -1303,15 +1306,14 @@ img {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    right: 0;
+    right: 0px;
     width: 60px;
     height: 100%;
-    background: linear-gradient(to right, transparent, var(--bg, #ececef) 70%, var(--bg, #ececef) 100%);
+    background: transparent;
     z-index: 100;
     align-items: center;
     justify-content: center;
     pointer-events: none;
-    opacity: 0.9;
   }
   
   .mobile-scroll-indicator svg {
@@ -1319,10 +1321,9 @@ img {
     color: white;
     border-radius: 50%;
     padding: 6px;
-    width: 28px;
-    height: 28px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    transform: translateX(10px);
+    width: 32px;
+    height: 32px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   }
   
   /* BUST 3D on mobile - Coloca o busto na Hero */
