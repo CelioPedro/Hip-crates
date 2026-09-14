@@ -140,11 +140,11 @@ img {
   background: radial-gradient(
     closest-side,
     rgba(40, 190, 255, 0.35),
-    transparent 70%
+    transparent 100%
   );
-  filter: blur(60px);
   z-index: 1;
   pointer-events: none;
+  /* Removed filter: blur(60px) as it causes severe lag on iOS Safari during opacity animations */
 }
 
 .wave-glow.b {
@@ -154,7 +154,7 @@ img {
   background: radial-gradient(
     closest-side,
     rgba(70, 230, 180, 0.3),
-    transparent 70%
+    transparent 100%
   );
 }
 
