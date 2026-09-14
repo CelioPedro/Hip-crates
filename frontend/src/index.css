@@ -1312,8 +1312,8 @@ img {
   .mobile-mega-carousel .treatment,
   .mobile-mega-carousel .doctor-card,
   .mobile-mega-carousel .info-card {
-    flex: 0 0 85% !important;
-    max-width: 85% !important;
+    flex: 0 0 72% !important;
+    max-width: 72% !important;
     scroll-snap-align: center;
     margin: 0 !important;
     height: auto !important;

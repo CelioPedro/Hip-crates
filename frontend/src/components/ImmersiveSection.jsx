@@ -99,10 +99,10 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
   const handleCarouselScroll = (e) => handleGenericScroll(e, leftIndicatorRef, rightIndicatorRef);
 
   const handleNextCard = () => {
-    if (carouselRef.current) carouselRef.current.scrollBy({ left: carouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
+    if (carouselRef.current) carouselRef.current.scrollBy({ left: carouselRef.current.clientWidth * 0.72, behavior: 'smooth' });
   };
   const handlePrevCard = () => {
-    if (carouselRef.current) carouselRef.current.scrollBy({ left: -carouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
+    if (carouselRef.current) carouselRef.current.scrollBy({ left: -carouselRef.current.clientWidth * 0.72, behavior: 'smooth' });
   };
 
   const handleMarqueeScroll = (e) => {
