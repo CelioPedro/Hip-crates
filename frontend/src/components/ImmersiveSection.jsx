@@ -153,10 +153,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
     mm.add("(min-width: 801px)", () => {
       // 1. Typing effect timeline
       const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top", // Trigger exactly when the section is fully framed and pinned
-        },
+        paused: true,
         onStart: () => {
           // Stop smooth scrolling while the typing effect happens
           if (lenisInstanceRef.current) lenisInstanceRef.current.stop();
@@ -165,7 +162,18 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
           // Resume smooth scrolling
           if (lenisInstanceRef.current) lenisInstanceRef.current.start();
           if (bustState.current) bustState.current.phase = "DONE"; 
+        },
+        onReverseComplete: () => {
+          // Reset bust phase when fully hidden
+          if (bustState.current) bustState.current.phase = "START";
         }
+      });
+
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top top", // Trigger exactly when the section is fully framed and pinned
+        onEnter: () => tl.timeScale(1).play(),
+        onLeaveBack: () => tl.timeScale(5).reverse() // Reverses 5x faster for a smooth but quick hide
       });
 
       const titleChars = titleRef.current.querySelectorAll('.anim-char');
@@ -337,6 +345,9 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
           { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 1, stagger: 0.1, ease: "back.out(1.2)" },
           "-=1"
         )
+        .set(teamClusterRef.current.querySelectorAll('.marquee-indicator'), {
+          opacity: 0.6 // Allow React classes to toggle it
+        })
         // Fade in Header and Footer
         .to([headerRef.current, footerRef.current], { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.5")
         
@@ -552,7 +563,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
         </div>
 
         {/* Team Cluster (Phase 7) - Marquee Hover UI */}
-        <div className="immersive-absolute-layer" ref={teamClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', right: '5%', width: '45%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <div className="immersive-absolute-layer" ref={teamClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
           
           <div 
             className="marquee-scroll-area" 
