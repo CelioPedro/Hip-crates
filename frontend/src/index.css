@@ -1306,15 +1306,23 @@ img {
     position: absolute;
     top: calc(50% - 10px);
     transform: translateY(-50%);
-    right: 0px;
     width: 60px;
     height: 100%;
     background: transparent;
     z-index: 100;
     align-items: center;
-    justify-content: center;
     pointer-events: auto;
     cursor: pointer;
+  }
+  
+  .mobile-scroll-indicator.left {
+    left: 0px;
+    justify-content: center;
+  }
+
+  .mobile-scroll-indicator.right {
+    right: 0px;
+    justify-content: center;
   }
   
   .mobile-scroll-indicator svg {
