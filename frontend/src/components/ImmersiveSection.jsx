@@ -445,8 +445,8 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
           </p>
         </div>
 
-        {/* Cards Content */}
-        <div className="immersive-absolute-layer" ref={cardsWrapperRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
+        {/* MEGA CAROUSEL FOR MOBILE (Wraps Phase 3 and Phase 5 elements) */}
+        <div className="mobile-mega-carousel-wrapper">
           
           <div 
             className="mobile-scroll-indicator left" 
@@ -457,25 +457,67 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
             <CaretLeft weight="bold" />
           </div>
 
-          <div className="treatments" ref={carouselRef} onScroll={handleCarouselScroll}>
-            {specialties.map((item, index) => (
-              <article 
-                className="clay-card treatment" 
-                key={index} 
-                style={{ marginBottom: index !== 2 ? '14px' : '0', cursor: 'pointer', pointerEvents: 'auto', position: 'relative', zIndex: 50 }}
-                onClick={(e) => {
-                  console.log("Card clicado!", item.featureKey);
-                  setActiveFeatureModal(item.featureKey);
-                }}
-              >
-                <div className="head">
-                  <span className="icon" aria-hidden="true">{item.icon}</span>
-                  <h3 style={{ fontSize: '15px' }}>{item.title}</h3>
-                  <button className="menu-dots" aria-label="Mais"><DotsThree weight="bold" /></button>
+          <div className="mobile-mega-carousel" ref={carouselRef} onScroll={handleCarouselScroll}>
+            
+            {/* Cards Content (Phase 3) */}
+            <div className="immersive-absolute-layer" ref={cardsWrapperRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
+              <div className="treatments">
+                {specialties.map((item, index) => (
+                  <article 
+                    className="clay-card treatment" 
+                    key={index} 
+                    style={{ marginBottom: index !== 2 ? '14px' : '0', cursor: 'pointer', pointerEvents: 'auto', position: 'relative', zIndex: 50 }}
+                    onClick={(e) => {
+                      console.log("Card clicado!", item.featureKey);
+                      setActiveFeatureModal(item.featureKey);
+                    }}
+                  >
+                    <div className="head">
+                      <span className="icon" aria-hidden="true">{item.icon}</span>
+                      <h3 style={{ fontSize: '15px' }}>{item.title}</h3>
+                      <button className="menu-dots" aria-label="Mais"><DotsThree weight="bold" /></button>
+                    </div>
+                    <p style={{ fontSize: '14px', margin: '4px 0 0 0' }}>{item.desc}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            {/* Doctor & Info Cluster (Phase 5) */}
+            <div className="immersive-absolute-layer" ref={doctorClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
+              <div className="doctor-cluster" style={{ marginTop: 0 }}>
+                <div className="clay-card doctor-card">
+                  <div className="doctor-avatar" aria-hidden="true">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150" alt="Médica" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  <div className="doctor-meta">
+                    <div className="name">Dra. Sarah Johnson</div>
+                    <div className="role">Diretoria Médica</div>
+                  </div>
+                  <button className="search-btn" aria-label="Pesquisar">
+                    <DotsThree weight="bold" />
+                  </button>
                 </div>
-                <p style={{ fontSize: '14px', margin: '4px 0 0 0' }}>{item.desc}</p>
-              </article>
-            ))}
+                
+                <div className="info-grid">
+                  <div className="clay-card info-card">
+                    <span className="ic-head">
+                      <Scan size={18} />
+                      Triagem IA
+                    </span>
+                    <p>Classificação inteligente e rápida de sintomas do paciente.</p>
+                  </div>
+                  <div className="clay-card info-card">
+                    <span className="ic-head">
+                      <ChartLineUp size={18} />
+                      Integração
+                    </span>
+                    <p>Agendamento direto no prontuário eletrônico da clínica.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
 
           <div 
@@ -486,43 +528,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
           >
             <CaretRight weight="bold" />
           </div>
-        </div>
 
-        {/* Doctor & Info Cluster (CEO / Diretor) */}
-        <div className="immersive-absolute-layer" ref={doctorClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
-          
-          <div className="doctor-cluster" style={{ marginTop: 0 }}>
-            <div className="clay-card doctor-card">
-              <div className="doctor-avatar" aria-hidden="true">
-                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150" alt="Médica" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </div>
-              <div className="doctor-meta">
-                <div className="name">Dra. Sarah Johnson</div>
-                <div className="role">Diretoria Médica</div>
-              </div>
-              <button className="search-btn" aria-label="Pesquisar">
-                <DotsThree weight="bold" />
-              </button>
-            </div>
-            
-            <div className="info-grid">
-              <div className="clay-card info-card">
-                <span className="ic-head">
-                  <Scan size={18} />
-                  Triagem IA
-                </span>
-                <p>Classificação inteligente e rápida de sintomas do paciente.</p>
-              </div>
-              <div className="clay-card info-card">
-                <span className="ic-head">
-                  <ChartLineUp size={18} />
-                  Integração
-                </span>
-                <p>Agendamento direto no prontuário eletrônico da clínica.</p>
-              </div>
-            </div>
-          </div>
-          
         </div>
 
         {/* Team Cluster (Phase 7) - Marquee Hover UI */}

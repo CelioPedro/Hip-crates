@@ -1094,6 +1094,10 @@ img {
   display: none;
 }
 
+.mobile-mega-carousel-wrapper, .mobile-mega-carousel {
+  display: contents;
+}
+
 @media (max-width: 800px) {
   #root, .page {
     overflow-x: hidden;
@@ -1268,48 +1272,51 @@ img {
     opacity: 1 !important;
     visibility: visible !important;
   }
-  /* Horizontal swipe carousel for cards */
-  .treatments {
-    display: flex;
+  /* Mobile Mega Carousel wrapper */
+  .mobile-mega-carousel-wrapper {
+    display: block !important;
+    position: relative;
+    width: 100%;
+  }
+
+  .mobile-mega-carousel {
+    display: flex !important;
     flex-direction: row;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 16px;
     padding-bottom: 20px;
-    margin: 0 -20px; /* Pull out of padding to allow full edge-to-edge swipe */
+    padding-top: 10px;
+    margin: 0 -20px;
     padding-left: 20px;
     padding-right: 20px;
-    /* Hide scrollbar for cleaner look */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
     mask-image: linear-gradient(to right, black 85%, transparent 100%);
     transition: mask-image 0.3s ease, -webkit-mask-image 0.3s ease;
   }
-  .treatments::-webkit-scrollbar {
+  .mobile-mega-carousel::-webkit-scrollbar {
     display: none;
   }
-  .treatments > * {
-    flex: 0 0 85%;
-    scroll-snap-align: center;
-    margin-bottom: 0 !important; /* Override desktop stacking */
+
+  /* Strip boxes from wrappers so all cards act as direct siblings */
+  .mobile-mega-carousel .immersive-absolute-layer,
+  .mobile-mega-carousel .treatments,
+  .mobile-mega-carousel .doctor-cluster,
+  .mobile-mega-carousel .info-grid {
+    display: contents !important;
   }
 
-  /* Compact Dashboard style for Doctor section */
-  .info-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 12px;
-  }
-  .info-card {
-    padding: 14px 12px !important;
-  }
-  .info-card .ic-head {
-    font-size: 13px !important;
-  }
-  .info-card p {
-    font-size: 12px !important;
-    margin-top: 8px !important;
+  /* The actual cards inside the mega carousel */
+  .mobile-mega-carousel .treatment,
+  .mobile-mega-carousel .doctor-card,
+  .mobile-mega-carousel .info-card {
+    flex: 0 0 85% !important;
+    max-width: 85% !important;
+    scroll-snap-align: center;
+    margin: 0 !important;
+    height: auto !important;
   }
 
   .treatment.clay-card, .doctor-card, .info-card {
