@@ -8,7 +8,7 @@ import GlassModal from './GlassModal';
 import FeatureModalContent from './FeatureModalContent';
 import ProfessionalCard from './ProfessionalCard';
 import Header from './Header';
-import { ArrowCircleRight, DotsThree, TwitterLogo, FacebookLogo, InstagramLogo, Scan, ChartLineUp, Dna, Heartbeat, CaretUp, CaretDown, CaretRight } from "@phosphor-icons/react";
+import { ArrowCircleRight, DotsThree, TwitterLogo, FacebookLogo, InstagramLogo, Scan, ChartLineUp, Dna, Heartbeat, CaretUp, CaretDown, CaretRight, CaretLeft } from "@phosphor-icons/react";
 import './MarqueeList.css';
 import { useLenis } from 'lenis/react';
 
@@ -42,7 +42,8 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
   const footerRef = useRef(null);
   const headerRef = useRef(null);
   const waveRef = useRef(null);
-  const indicatorRef = useRef(null);
+  const leftIndicatorRef = useRef(null);
+  const rightIndicatorRef = useRef(null);
   const carouselRef = useRef(null);
   const lenis = useLenis();
   const lenisInstanceRef = useRef(null);
@@ -60,13 +61,23 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
     const isAtStart = scrollLeft <= 15;
     const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 15;
     
-    if (indicatorRef.current) {
+    if (rightIndicatorRef.current) {
       if (isAtEnd) {
-        indicatorRef.current.style.opacity = '0';
-        indicatorRef.current.style.visibility = 'hidden';
+        rightIndicatorRef.current.style.opacity = '0';
+        rightIndicatorRef.current.style.visibility = 'hidden';
       } else {
-        indicatorRef.current.style.opacity = '0.9';
-        indicatorRef.current.style.visibility = 'visible';
+        rightIndicatorRef.current.style.opacity = '0.9';
+        rightIndicatorRef.current.style.visibility = 'visible';
+      }
+    }
+
+    if (leftIndicatorRef.current) {
+      if (isAtStart) {
+        leftIndicatorRef.current.style.opacity = '0';
+        leftIndicatorRef.current.style.visibility = 'hidden';
+      } else {
+        leftIndicatorRef.current.style.opacity = '0.9';
+        leftIndicatorRef.current.style.visibility = 'visible';
       }
     }
 
@@ -87,6 +98,12 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
   const handleNextCard = () => {
     if (carouselRef.current) {
       carouselRef.current.scrollBy({ left: carouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
+    }
+  };
+
+  const handlePrevCard = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: -carouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
     }
   };
 
@@ -136,52 +153,32 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
 
     // DESKTOP: Original Pinned Timeline
     mm.add("(min-width: 801px)", () => {
-      // 1. Typing effect timeline
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top", // Trigger exactly when the section is fully framed and pinned
-        },
-        onStart: () => {
-          // Stop smooth scrolling while the typing effect happens
-          if (lenisInstanceRef.current) lenisInstanceRef.current.stop();
-        },
-        onComplete: () => {
-          // Resume smooth scrolling
-          if (lenisInstanceRef.current) lenisInstanceRef.current.start();
-          if (bustState.current) bustState.current.phase = "DONE"; 
-        }
-      });
-
+      // 1. Initial fade-in of texts
       const titleChars = titleRef.current.querySelectorAll('.anim-char');
       const descChars = descRef.current.querySelectorAll('.anim-char');
+      const allTextChars = [...titleChars, ...descChars];
 
-      gsap.set([titleChars, descChars], { opacity: 0, y: 15, filter: "blur(4px)" });
-
-      const trackReading = function() {
-        bustState.current.phase = "READING"; 
-        const el = this.targets()[0];
-        if (el && el.getBoundingClientRect) {
-          const rect = el.getBoundingClientRect();
-          if (rect.width > 0) {
-            let nx = (rect.left + rect.width / 2) / window.innerWidth * 2 - 1;
-            let ny = -(rect.top + rect.height / 2) / window.innerHeight * 2 + 1;
-            nx = Math.max(-0.6, Math.min(0.6, nx));
-            ny = Math.max(-0.6, Math.min(0.6, ny));
-            bustState.current.simulatedX = nx;
-            bustState.current.simulatedY = ny;
-          }
+      let readCount = 0;
+      const trackReading = () => {
+        readCount++;
+        const progress = readCount / allTextChars.length;
+        if (bustState.current) {
+          bustState.current.simulatedX = -0.5 + (progress * 1.5);
+          bustState.current.simulatedY = -0.2 + (progress * 0.4);
         }
       };
 
-      tl.to(titleChars, {
-        opacity: 1,
+      gsap.set(descChars, { opacity: 0, y: 15, filter: "blur(4px)" });
+      
+      const tlIntro = gsap.timeline();
+      tlIntro.to(titleChars, {
+        opacity: 1, 
         y: 0,
-        filter: "blur(0px)",
+        filter: "blur(0px)", 
         duration: 0.8, 
-        ease: "power2.out",
+        ease: "power3.out", 
         stagger: {
-          each: 0.05, 
+          each: 0.04, 
           onStart: trackReading
         }
       })
@@ -189,10 +186,10 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
         opacity: 1,
         y: 0,
         filter: "blur(0px)",
-        duration: 0.8, 
-        ease: "power2.out",
+        duration: 0.8,
+        ease: "power3.out",
         stagger: {
-          each: 0.05, 
+          each: 0.04,
           onStart: trackReading
         }
       });
@@ -286,53 +283,46 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
         })
         .to(cardsWrapperRef.current, { autoAlpha: 0, duration: 0.1 })
         
-        // PHASE 5: Fade in Doctor & Info cluster
-        .to(doctorClusterRef.current, { autoAlpha: 1, duration: 0.1 }, "-=0.4")
+        // PHASE 5: Fade in Doctor & Info (CEO)
+        .to(doctorClusterRef.current, { autoAlpha: 1, duration: 0.1 })
         .to(doctorCards, {
           autoAlpha: 1,
-          scale: 1,
           y: 0,
+          scale: 1,
           filter: "blur(0px)",
           duration: 1.2,
-          stagger: 0.15,
+          stagger: 0.3,
           ease: "back.out(1.2)"
-        }, "-=0.3")
+        }, "-=0.1")
         
-        // Phase 5b: Fade in Social Icons
-        .fromTo(socialRef.current.querySelectorAll('.social-btn'),
-          { autoAlpha: 0, y: 15 },
-          { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power2.out" },
-          "-=0.8"
-        )
+        // Keep CEO cluster on screen for a moment
+        .to({}, { duration: 0.5 })
         
-        // PHASE 6: Fade out Doctor & Info cluster
-        .to({}, { duration: 0.5 }) // Wait before fading out
-        .to([doctorCards, socialRef.current.querySelectorAll('.social-btn')], {
+        // PHASE 6: Fade out CEO cluster
+        .to(doctorCards, {
           autoAlpha: 0,
           y: -30,
+          scale: 0.9,
           filter: "blur(8px)",
           duration: 1,
-          stagger: 0.05,
+          stagger: 0.1,
           ease: "power2.in"
         })
         .to(doctorClusterRef.current, { autoAlpha: 0, duration: 0.1 })
-
-        // PHASE 7: Appear Team Marquee Cluster instantly to avoid scroll hijacking conflicts
+        
+        // PHASE 7: Fade in The Rest of the Team (Marquee) + Atmosphere
         .to(teamClusterRef.current, { autoAlpha: 1, duration: 0.1 })
-        .to([footerRef.current, headerRef.current], { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" }, "<")
-        .to(waveRef.current, { autoAlpha: 0.75, scale: 1, x: 0, duration: 1.2, ease: "power2.out" }, "<")
-        .set(teamClusterRef.current.querySelectorAll('.marquee-item'), {
-          autoAlpha: 1,
-          y: 0,
-          filter: "blur(0px)"
-        })
-        .set(teamClusterRef.current.querySelector('.marquee-list'), {
-          autoAlpha: 1
-        })
-        .set(teamClusterRef.current.querySelectorAll('.marquee-indicator'), {
-          opacity: 0.6 // Indicator opacity is handled manually by React styles
-        })
-        // Add buffer so the section remains pinned for a bit while they interact with the marquee
+        .to(marqueeList, { autoAlpha: 1, duration: 0.8 }, "-=0.1") // White bg fades in
+        .to(waveRef.current, { autoAlpha: 1, scale: 1, x: 0, duration: 1.5, ease: "power2.out" }, "-=0.8")
+        .fromTo(teamClusterRef.current.querySelectorAll('.marquee-item'), 
+          { autoAlpha: 0, y: 30, filter: "blur(10px)" },
+          { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 1, stagger: 0.1, ease: "back.out(1.2)" },
+          "-=1"
+        )
+        // Fade in Header and Footer
+        .to([headerRef.current, footerRef.current], { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.5")
+        
+        // Final pause to let user interact with the list
         .to({}, { duration: 1.5 });
     });
 
@@ -459,6 +449,16 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
 
         {/* Cards Content */}
         <div className="immersive-absolute-layer" ref={cardsWrapperRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
+          
+          <div 
+            className="mobile-scroll-indicator left" 
+            ref={leftIndicatorRef} 
+            onClick={handlePrevCard}
+            style={{ transition: 'opacity 0.3s ease, visibility 0.3s ease', opacity: 0, visibility: 'hidden' }}
+          >
+            <CaretLeft weight="bold" />
+          </div>
+
           <div className="treatments" ref={carouselRef} onScroll={handleCarouselScroll}>
             {specialties.map((item, index) => (
               <article 
@@ -479,9 +479,10 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
               </article>
             ))}
           </div>
+
           <div 
-            className="mobile-scroll-indicator" 
-            ref={indicatorRef} 
+            className="mobile-scroll-indicator right" 
+            ref={rightIndicatorRef} 
             onClick={handleNextCard}
             style={{ transition: 'opacity 0.3s ease, visibility 0.3s ease' }}
           >
