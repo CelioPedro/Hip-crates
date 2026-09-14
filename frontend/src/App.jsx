@@ -5,6 +5,8 @@ import { useGSAP } from '@gsap/react';
 import { ReactLenis } from 'lenis/react';
 import { ArrowDown } from "@phosphor-icons/react";
 
+import { useProgress } from '@react-three/drei';
+
 import Header from './components/Header';
 import Hero from './components/Hero';
 import ChatModal from './components/ChatModal';
@@ -19,6 +21,15 @@ function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
   const lenisRef = useRef(null);
+  const { progress } = useProgress();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (progress === 100) {
+      const t = setTimeout(() => setIsLoaded(true), 200);
+      return () => clearTimeout(t);
+    }
+  }, [progress]);
 
   // Sync GSAP ticker with Lenis
   useEffect(() => {
@@ -47,6 +58,8 @@ function App() {
       gsap.set(".wave-wrap", { x: 120, opacity: 0 });
       gsap.set(".wave-glow", { opacity: 0 });
       gsap.set(".bg-text", { opacity: 0, scale: 1.1 });
+
+      if (!isLoaded) return;
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.15 });
       tl.to(".header > *", { y: 0, opacity: 1, duration: 0.7, stagger: 0.07 })
@@ -82,6 +95,8 @@ function App() {
       gsap.set(".wave-glow", { opacity: 0 });
       gsap.set(".bg-text", { opacity: 0, scale: 1.02 });
 
+      if (!isLoaded) return;
+
       const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.1 });
       tl.to(".header > *", { y: 0, opacity: 1, duration: 0.5, stagger: 0.05 })
         .to(".wave-glow", { opacity: 1, duration: 1 }, "-=.4")
@@ -97,8 +112,8 @@ function App() {
         .to(".mobile-hero-layout .future-tag", { x: 0, opacity: 1, duration: 0.4 }, "-=.3");
 
       gsap.to(".wave-wrap", { scrollTrigger: { trigger: "body", start: "top top", end: "+=800", scrub: 1 }, y: -80, rotation: 20 });
-      gsap.to(".bg-text", { scrollTrigger: { trigger: "body", start: "top top", end: "+=600", scrub: 1 }, y: 50 });
-      gsap.to(".mobile-hero-layout .mobile-badge", { scrollTrigger: { trigger: "body", start: "top top", end: "+=600", scrub: 1 }, y: 40 });
+      gsap.to(".bg-text", { scrollTrigger: { trigger: "body", start: "top top", end: "+=1000", scrub: 1.2 }, xPercent: -15, opacity: 0.5 });
+      gsap.to(".mobile-hero-layout .mobile-badge", { scrollTrigger: { trigger: "body", start: "top top", end: "+=600", scrub: 1.5 }, y: 60 });
     });
 
     // Global scroll badge visibility (appears from second section onwards)
@@ -114,10 +129,37 @@ function App() {
       ease: "back.out(1.5)"
     });
 
-  }, []);
+  }, { dependencies: [isLoaded] });
 
   return (
     <ReactLenis root ref={lenisRef} autoRaf={false}>
+      {/* LOADING OVERLAY */}
+      <div 
+        style={{
+          position: 'fixed', inset: 0, zIndex: 9999, 
+          background: '#F9F9F9', color: '#080808', 
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          transition: 'opacity 0.8s ease-in-out, visibility 0.8s ease-in-out',
+          opacity: isLoaded ? 0 : 1,
+          visibility: isLoaded ? 'hidden' : 'visible',
+          pointerEvents: isLoaded ? 'none' : 'auto'
+        }}
+      >
+        <div style={{ fontSize: '13px', letterSpacing: '4px', textTransform: 'uppercase', marginBottom: '20px', fontWeight: 500 }}>
+          Carregando Experiência
+        </div>
+        <div style={{ width: '220px', height: '2px', background: 'rgba(0,0,0,0.1)', overflow: 'hidden', borderRadius: '2px' }}>
+          <div style={{ 
+            width: `${progress}%`, height: '100%', background: '#080808', 
+            transition: 'width 0.2s ease-out' 
+          }} />
+        </div>
+        <div style={{ marginTop: '16px', fontSize: '12px', opacity: 0.4, fontVariantNumeric: 'tabular-nums' }}>
+          {Math.round(progress)}%
+        </div>
+      </div>
+
       <div className="page">
         {/* ─── WAVE PNG + ATMOSPHERIC GLOW ─── */}
         <div className="wave-glow"></div>
