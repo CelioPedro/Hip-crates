@@ -43,6 +43,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
   const headerRef = useRef(null);
   const waveRef = useRef(null);
   const indicatorRef = useRef(null);
+  const carouselRef = useRef(null);
   const lenis = useLenis();
   const lenisInstanceRef = useRef(null);
   const scrollTimeoutRef = useRef(null);
@@ -56,6 +57,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
 
   const handleCarouselScroll = (e) => {
     const { scrollLeft, scrollWidth, clientWidth } = e.currentTarget;
+    const isAtStart = scrollLeft <= 15;
     const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 15;
     
     if (indicatorRef.current) {
@@ -68,13 +70,23 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
       }
     }
 
-    // Also toggle the CSS mask so the last card isn't cut off when fully scrolled
-    if (isAtEnd) {
-      e.currentTarget.style.maskImage = 'none';
-      e.currentTarget.style.webkitMaskImage = 'none';
-    } else {
-      e.currentTarget.style.maskImage = 'linear-gradient(to right, black 85%, transparent 100%)';
-      e.currentTarget.style.webkitMaskImage = 'linear-gradient(to right, black 85%, transparent 100%)';
+    // Dynamic dual-sided CSS mask
+    let maskStr = 'none';
+    if (isAtStart && !isAtEnd) {
+      maskStr = 'linear-gradient(to right, black 85%, transparent 100%)';
+    } else if (!isAtStart && isAtEnd) {
+      maskStr = 'linear-gradient(to right, transparent 0%, black 15%, black 100%)';
+    } else if (!isAtStart && !isAtEnd) {
+      maskStr = 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)';
+    }
+
+    e.currentTarget.style.maskImage = maskStr;
+    e.currentTarget.style.webkitMaskImage = maskStr;
+  };
+
+  const handleNextCard = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: carouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
     }
   };
 
@@ -447,7 +459,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
 
         {/* Cards Content */}
         <div className="immersive-absolute-layer" ref={cardsWrapperRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
-          <div className="treatments" onScroll={handleCarouselScroll}>
+          <div className="treatments" ref={carouselRef} onScroll={handleCarouselScroll}>
             {specialties.map((item, index) => (
               <article 
                 className="clay-card treatment" 
@@ -467,7 +479,12 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
               </article>
             ))}
           </div>
-          <div className="mobile-scroll-indicator" ref={indicatorRef} style={{ transition: 'opacity 0.3s ease, visibility 0.3s ease' }}>
+          <div 
+            className="mobile-scroll-indicator" 
+            ref={indicatorRef} 
+            onClick={handleNextCard}
+            style={{ transition: 'opacity 0.3s ease, visibility 0.3s ease' }}
+          >
             <CaretRight weight="bold" />
           </div>
         </div>

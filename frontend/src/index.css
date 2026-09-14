@@ -1304,7 +1304,7 @@ img {
   .mobile-scroll-indicator {
     display: flex;
     position: absolute;
-    top: 50%;
+    top: calc(50% - 10px);
     transform: translateY(-50%);
     right: 0px;
     width: 60px;
@@ -1313,7 +1313,8 @@ img {
     z-index: 100;
     align-items: center;
     justify-content: center;
-    pointer-events: none;
+    pointer-events: auto;
+    cursor: pointer;
   }
   
   .mobile-scroll-indicator svg {
