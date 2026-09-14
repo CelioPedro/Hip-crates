@@ -42,9 +42,15 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
   const footerRef = useRef(null);
   const headerRef = useRef(null);
   const waveRef = useRef(null);
+  
   const leftIndicatorRef = useRef(null);
   const rightIndicatorRef = useRef(null);
   const carouselRef = useRef(null);
+
+  const docLeftIndicatorRef = useRef(null);
+  const docRightIndicatorRef = useRef(null);
+  const docCarouselRef = useRef(null);
+
   const lenis = useLenis();
   const lenisInstanceRef = useRef(null);
   const scrollTimeoutRef = useRef(null);
@@ -56,32 +62,31 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
   const [activeFeatureModal, setActiveFeatureModal] = useState(null);
   const [activeProfessional, setActiveProfessional] = useState(null);
 
-  const handleCarouselScroll = (e) => {
+  const handleGenericScroll = (e, leftRef, rightRef) => {
     const { scrollLeft, scrollWidth, clientWidth } = e.currentTarget;
     const isAtStart = scrollLeft <= 15;
     const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 15;
     
-    if (rightIndicatorRef.current) {
+    if (rightRef.current) {
       if (isAtEnd) {
-        rightIndicatorRef.current.style.opacity = '0';
-        rightIndicatorRef.current.style.visibility = 'hidden';
+        rightRef.current.style.opacity = '0';
+        rightRef.current.style.visibility = 'hidden';
       } else {
-        rightIndicatorRef.current.style.opacity = '0.9';
-        rightIndicatorRef.current.style.visibility = 'visible';
+        rightRef.current.style.opacity = '0.9';
+        rightRef.current.style.visibility = 'visible';
       }
     }
 
-    if (leftIndicatorRef.current) {
+    if (leftRef.current) {
       if (isAtStart) {
-        leftIndicatorRef.current.style.opacity = '0';
-        leftIndicatorRef.current.style.visibility = 'hidden';
+        leftRef.current.style.opacity = '0';
+        leftRef.current.style.visibility = 'hidden';
       } else {
-        leftIndicatorRef.current.style.opacity = '0.9';
-        leftIndicatorRef.current.style.visibility = 'visible';
+        leftRef.current.style.opacity = '0.9';
+        leftRef.current.style.visibility = 'visible';
       }
     }
 
-    // Dynamic dual-sided CSS mask
     let maskStr = 'none';
     if (isAtStart && !isAtEnd) {
       maskStr = 'linear-gradient(to right, black 85%, transparent 100%)';
@@ -95,16 +100,21 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
     e.currentTarget.style.webkitMaskImage = maskStr;
   };
 
+  const handleCarouselScroll = (e) => handleGenericScroll(e, leftIndicatorRef, rightIndicatorRef);
+  const handleDocCarouselScroll = (e) => handleGenericScroll(e, docLeftIndicatorRef, docRightIndicatorRef);
+
   const handleNextCard = () => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: carouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
-    }
+    if (carouselRef.current) carouselRef.current.scrollBy({ left: carouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
+  };
+  const handlePrevCard = () => {
+    if (carouselRef.current) carouselRef.current.scrollBy({ left: -carouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
   };
 
-  const handlePrevCard = () => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: -carouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
-    }
+  const handleDocNextCard = () => {
+    if (docCarouselRef.current) docCarouselRef.current.scrollBy({ left: docCarouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
+  };
+  const handleDocPrevCard = () => {
+    if (docCarouselRef.current) docCarouselRef.current.scrollBy({ left: -docCarouselRef.current.clientWidth * 0.85, behavior: 'smooth' });
   };
 
   const handleMarqueeScroll = (e) => {
@@ -492,7 +502,17 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
 
         {/* Doctor & Info Cluster (CEO / Diretor) */}
         <div className="immersive-absolute-layer" ref={doctorClusterRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
-          <div className="doctor-cluster" style={{ marginTop: 0 }}>
+          
+          <div 
+            className="mobile-scroll-indicator left" 
+            ref={docLeftIndicatorRef} 
+            onClick={handleDocPrevCard}
+            style={{ transition: 'opacity 0.3s ease, visibility 0.3s ease', opacity: 0, visibility: 'hidden' }}
+          >
+            <CaretLeft weight="bold" />
+          </div>
+
+          <div className="doctor-cluster" ref={docCarouselRef} onScroll={handleDocCarouselScroll} style={{ marginTop: 0 }}>
             <div className="clay-card doctor-card">
               <div className="doctor-avatar" aria-hidden="true">
                 <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150" alt="Médica" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -522,6 +542,15 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
                 <p>Agendamento direto no prontuário eletrônico da clínica.</p>
               </div>
             </div>
+          </div>
+
+          <div 
+            className="mobile-scroll-indicator right" 
+            ref={docRightIndicatorRef} 
+            onClick={handleDocNextCard}
+            style={{ transition: 'opacity 0.3s ease, visibility 0.3s ease' }}
+          >
+            <CaretRight weight="bold" />
           </div>
         </div>
 

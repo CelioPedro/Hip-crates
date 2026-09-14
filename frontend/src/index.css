@@ -1269,7 +1269,7 @@ img {
     visibility: visible !important;
   }
   /* Horizontal swipe carousel for cards */
-  .treatments {
+  .treatments, .doctor-cluster {
     display: flex;
     flex-direction: row;
     overflow-x: auto;
@@ -1286,19 +1286,24 @@ img {
     mask-image: linear-gradient(to right, black 85%, transparent 100%);
     transition: mask-image 0.3s ease, -webkit-mask-image 0.3s ease;
   }
-  .treatments::-webkit-scrollbar {
+  .treatments::-webkit-scrollbar, .doctor-cluster::-webkit-scrollbar {
     display: none;
   }
-  .treatments > * {
+  .treatments > *, .doctor-cluster > *, .info-grid > * {
     flex: 0 0 85%;
     scroll-snap-align: center;
     margin-bottom: 0 !important; /* Override desktop stacking */
   }
 
-  .treatment.clay-card {
+  .info-grid {
+    display: contents;
+  }
+
+  .treatment.clay-card, .doctor-card, .info-card {
     border: 1px solid rgba(255, 255, 255, 0.8) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 2px 5px rgba(255, 255, 255, 0.5) !important;
     background: rgba(255, 255, 255, 0.95) !important;
+    height: auto;
   }
 
   .mobile-scroll-indicator {
