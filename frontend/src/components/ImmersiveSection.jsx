@@ -8,7 +8,7 @@ import GlassModal from './GlassModal';
 import FeatureModalContent from './FeatureModalContent';
 import ProfessionalCard from './ProfessionalCard';
 import Header from './Header';
-import { ArrowCircleRight, DotsThree, TwitterLogo, FacebookLogo, InstagramLogo, Scan, ChartLineUp, Dna, Heartbeat, CaretUp, CaretDown } from "@phosphor-icons/react";
+import { ArrowCircleRight, DotsThree, TwitterLogo, FacebookLogo, InstagramLogo, Scan, ChartLineUp, Dna, Heartbeat, CaretUp, CaretDown, CaretRight } from "@phosphor-icons/react";
 import './MarqueeList.css';
 import { useLenis } from 'lenis/react';
 
@@ -42,6 +42,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
   const footerRef = useRef(null);
   const headerRef = useRef(null);
   const waveRef = useRef(null);
+  const indicatorRef = useRef(null);
   const lenis = useLenis();
   const lenisInstanceRef = useRef(null);
   const scrollTimeoutRef = useRef(null);
@@ -52,6 +53,18 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
   const [canScrollBottom, setCanScrollBottom] = useState(true);
   const [activeFeatureModal, setActiveFeatureModal] = useState(null);
   const [activeProfessional, setActiveProfessional] = useState(null);
+
+  const handleCarouselScroll = (e) => {
+    if (!indicatorRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = e.currentTarget;
+    if (scrollLeft + clientWidth >= scrollWidth - 15) {
+      indicatorRef.current.style.opacity = '0';
+      indicatorRef.current.style.visibility = 'hidden';
+    } else {
+      indicatorRef.current.style.opacity = '0.9';
+      indicatorRef.current.style.visibility = 'visible';
+    }
+  };
 
   const handleMarqueeScroll = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
@@ -422,7 +435,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
 
         {/* Cards Content */}
         <div className="immersive-absolute-layer" ref={cardsWrapperRef} style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, width: '100%' }}>
-          <div className="treatments">
+          <div className="treatments" onScroll={handleCarouselScroll}>
             {specialties.map((item, index) => (
               <article 
                 className="clay-card treatment" 
@@ -441,6 +454,9 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
                 <p style={{ fontSize: '14px', margin: '4px 0 0 0' }}>{item.desc}</p>
               </article>
             ))}
+          </div>
+          <div className="mobile-scroll-indicator" ref={indicatorRef} style={{ transition: 'opacity 0.3s ease, visibility 0.3s ease' }}>
+            <CaretRight weight="bold" />
           </div>
         </div>
 

@@ -1090,6 +1090,10 @@ img {
   display: none;
 }
 
+.mobile-scroll-indicator {
+  display: none;
+}
+
 @media (max-width: 800px) {
   #root, .page {
     overflow-x: hidden;
@@ -1292,6 +1296,33 @@ img {
     border: 1px solid rgba(255, 255, 255, 0.8) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 2px 5px rgba(255, 255, 255, 0.5) !important;
     background: rgba(255, 255, 255, 0.95) !important;
+  }
+
+  .mobile-scroll-indicator {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    width: 60px;
+    height: 100%;
+    background: linear-gradient(to right, transparent, var(--bg, #ececef) 70%, var(--bg, #ececef) 100%);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0.9;
+  }
+  
+  .mobile-scroll-indicator svg {
+    background: #080808;
+    color: white;
+    border-radius: 50%;
+    padding: 6px;
+    width: 28px;
+    height: 28px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transform: translateX(10px);
   }
   
   /* BUST 3D on mobile - Coloca o busto na Hero */
