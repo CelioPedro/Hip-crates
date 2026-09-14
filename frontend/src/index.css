@@ -1097,9 +1097,7 @@ img {
   display: none;
 }
 
-.mobile-mega-carousel-wrapper, .mobile-mega-carousel {
-  display: contents;
-}
+/* Removed display: contents on desktop to avoid GSAP offset bugs. Static wrappers don't trap absolute children anyway. */
 
 @media (max-width: 800px) {
   #root, .page {

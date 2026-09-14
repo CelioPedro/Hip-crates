@@ -151,32 +151,52 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
 
     // DESKTOP: Original Pinned Timeline
     mm.add("(min-width: 801px)", () => {
-      // 1. Initial fade-in of texts
+      // 1. Typing effect timeline
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top", // Trigger exactly when the section is fully framed and pinned
+        },
+        onStart: () => {
+          // Stop smooth scrolling while the typing effect happens
+          if (lenisInstanceRef.current) lenisInstanceRef.current.stop();
+        },
+        onComplete: () => {
+          // Resume smooth scrolling
+          if (lenisInstanceRef.current) lenisInstanceRef.current.start();
+          if (bustState.current) bustState.current.phase = "DONE"; 
+        }
+      });
+
       const titleChars = titleRef.current.querySelectorAll('.anim-char');
       const descChars = descRef.current.querySelectorAll('.anim-char');
-      const allTextChars = [...titleChars, ...descChars];
 
-      let readCount = 0;
-      const trackReading = () => {
-        readCount++;
-        const progress = readCount / allTextChars.length;
-        if (bustState.current) {
-          bustState.current.simulatedX = -0.5 + (progress * 1.5);
-          bustState.current.simulatedY = -0.2 + (progress * 0.4);
+      gsap.set([titleChars, descChars], { opacity: 0, y: 15, filter: "blur(4px)" });
+
+      const trackReading = function() {
+        bustState.current.phase = "READING"; 
+        const el = this.targets()[0];
+        if (el && el.getBoundingClientRect) {
+          const rect = el.getBoundingClientRect();
+          if (rect.width > 0) {
+            let nx = (rect.left + rect.width / 2) / window.innerWidth * 2 - 1;
+            let ny = -(rect.top + rect.height / 2) / window.innerHeight * 2 + 1;
+            nx = Math.max(-0.6, Math.min(0.6, nx));
+            ny = Math.max(-0.6, Math.min(0.6, ny));
+            bustState.current.simulatedX = nx;
+            bustState.current.simulatedY = ny;
+          }
         }
       };
 
-      gsap.set(descChars, { opacity: 0, y: 15, filter: "blur(4px)" });
-      
-      const tlIntro = gsap.timeline();
-      tlIntro.to(titleChars, {
-        opacity: 1, 
+      tl.to(titleChars, {
+        opacity: 1,
         y: 0,
-        filter: "blur(0px)", 
+        filter: "blur(0px)",
         duration: 0.8, 
-        ease: "power3.out", 
+        ease: "power2.out",
         stagger: {
-          each: 0.04, 
+          each: 0.05, 
           onStart: trackReading
         }
       })
@@ -184,10 +204,10 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
         opacity: 1,
         y: 0,
         filter: "blur(0px)",
-        duration: 0.8,
-        ease: "power3.out",
+        duration: 0.8, 
+        ease: "power2.out",
         stagger: {
-          each: 0.04,
+          each: 0.05, 
           onStart: trackReading
         }
       });
