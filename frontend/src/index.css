@@ -1243,7 +1243,7 @@ img {
   .immersive-section {
     flex-direction: column !important;
     justify-content: flex-start !important;
-    padding: 40px 0 140px 0 !important; /* Space for the absolute footer */
+    padding: 40px 0 !important;
     min-height: auto !important;
     overflow: visible !important; /* Allow the bust to overflow visually into the hero */
     margin-top: 0 !important; /* FIXED: Removed destructive -35vh */
@@ -1257,6 +1257,7 @@ img {
     display: flex;
     flex-direction: column;
     gap: 32px;
+    padding-bottom: 150px !important; /* Forces the container to grow, making room for the absolute footer at the bottom of the section */
   }
   .mobile-hide {
     display: none !important;
