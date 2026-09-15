@@ -126,3 +126,42 @@
   color: var(--text-2);
   margin: 0;
 }
+
+/* Responsiveness for Feature Modal */
+@media (max-width: 600px) {
+  .feature-main-title {
+    font-size: 1.4rem;
+  }
+  .feature-description {
+    font-size: 0.95rem;
+  }
+  .feature-tags-wrapper {
+    gap: 0.4rem;
+    padding: 0.75rem 0;
+    justify-content: flex-start;
+  }
+  .feature-tag {
+    font-size: 0.7rem;
+    background: rgba(40, 190, 255, 0.1); /* fallback bubble style on mobile */
+    -webkit-text-fill-color: var(--accent);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+  .feature-tag-separator {
+    display: none; /* Hide dots on mobile if using bubble style */
+  }
+  .feature-metric-card {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+  .feature-metric-icon {
+    width: 40px;
+    height: 40px;
+  }
+  .feature-metric-value {
+    font-size: 1.2rem;
+  }
+  .feature-metric-label {
+    font-size: 0.75rem;
+  }
+}
