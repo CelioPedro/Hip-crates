@@ -1406,7 +1406,6 @@ img {
     min-height: 250px !important;
     max-height: 350px !important;
     overflow-y: auto !important;   /* Restore scroll */
-    margin-bottom: 60px !important; /* Space above footer */
     pointer-events: auto !important;
     /* We ensure the list takes its full scrollable space but is confined */
   }
