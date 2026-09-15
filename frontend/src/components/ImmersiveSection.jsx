@@ -348,8 +348,9 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
         .set(teamClusterRef.current.querySelectorAll('.marquee-indicator'), {
           opacity: 0.6 // Allow React classes to toggle it
         })
-        // Fade in Header and Footer
+        // Fade in Header and Footer, and fade out the scroll badge since we reached the end
         .to([headerRef.current, footerRef.current], { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.5")
+        .to(document.querySelector(".global-scroll-badge"), { autoAlpha: 0, scale: 0.8, duration: 0.8, ease: "power2.out" }, "<")
         
         // Final pause to let user interact with the list
         .to({}, { duration: 1.5 });
@@ -441,13 +442,26 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
       {/* FOOTER - Appears in Phase 7 */}
       <footer ref={footerRef} style={{
         position: 'absolute', bottom: 0, left: 0, width: '100%',
-        padding: '24px 40px', display: 'flex', justifyContent: 'center',
-        alignItems: 'center', zIndex: 100, pointerEvents: 'none',
+        padding: '24px 40px', display: 'flex', justifyContent: 'space-between',
+        alignItems: 'center', zIndex: 100, pointerEvents: 'auto',
         borderTop: '1px solid rgba(0, 0, 0, 0.06)',
-        visibility: 'hidden'
+        visibility: 'hidden',
+        flexWrap: 'wrap',
+        gap: '20px'
       }}>
         <div style={{ color: 'var(--text-2)', fontSize: '0.85rem', fontWeight: 500, letterSpacing: '0.3px', opacity: 0.8 }}>
           © 2024 Clínica Neuromed - Todos os direitos reservados. CNPJ: 00.000.000/0000-00.
+        </div>
+        <div className="social">
+          <a href="#" className="social-btn" aria-label="Twitter">
+            <TwitterLogo weight="fill" size={20} />
+          </a>
+          <a href="#" className="social-btn" aria-label="Facebook">
+            <FacebookLogo weight="fill" size={20} />
+          </a>
+          <a href="#" className="social-btn" aria-label="Instagram">
+            <InstagramLogo weight="regular" size={20} />
+          </a>
         </div>
       </footer>
 
@@ -687,21 +701,6 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
             <CaretDown size={18} color="var(--text-2)" style={{ animation: 'subtleBounce 2s infinite ease-in-out' }} />
           </div>
 
-        </div>
-
-        {/* Social Icons */}
-        <div ref={socialRef} style={{ position: 'absolute', bottom: '-40px', left: 0, pointerEvents: 'none' }}>
-          <div className="social">
-            <a href="#" className="social-btn" aria-label="Twitter">
-              <TwitterLogo weight="fill" size={20} />
-            </a>
-            <a href="#" className="social-btn" aria-label="Facebook">
-              <FacebookLogo weight="fill" size={20} />
-            </a>
-            <a href="#" className="social-btn" aria-label="Instagram">
-              <InstagramLogo weight="regular" size={20} />
-            </a>
-          </div>
         </div>
 
       </div>
