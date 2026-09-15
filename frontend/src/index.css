@@ -1426,10 +1426,8 @@ img {
     width: 100vw !important; /* Fit exactly in viewport to prevent horizontal scroll */
     opacity: 0.35 !important;
     transform: scaleX(1) rotate(5deg) !important; /* Flipped and slightly tilted */
-    -webkit-mask-image: none !important; /* Nuke the inline mask to prevent circular bite marks */
-    mask-image: none !important;
-    -webkit-mask: none !important;
-    mask: none !important;
+    -webkit-mask-image: linear-gradient(to top, black 70%, transparent 95%) !important; /* Degrade para suavizar o corte reto no topo */
+    mask-image: linear-gradient(to top, black 70%, transparent 95%) !important;
   }
   .mobile-wave-glow {
     bottom: -10vh !important;
