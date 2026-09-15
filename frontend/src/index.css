@@ -1416,6 +1416,18 @@ img {
     filter: none !important;
     justify-content: center !important; /* Center the names on mobile */
   }
+
+  /* Merge wave with footer on mobile by removing negative bottom offset */
+  .mobile-wave-img {
+    bottom: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    opacity: 0.5 !important; /* Slightly more transparent so text is legible */
+  }
+  .mobile-wave-glow {
+    bottom: 0 !important;
+    right: 0 !important;
+  }
 }
 
 /* ════════════════════════════════════════════════

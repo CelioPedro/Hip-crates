@@ -406,7 +406,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
       }}>
       
       {/* BLUE WAVE BACKGROUND - Appears in Phase 7 */}
-      <div ref={waveRef} style={{
+      <div ref={waveRef} className="mobile-wave-wrapper" style={{
         position: 'absolute',
         top: 0,
         left: 0,
@@ -416,12 +416,12 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
         pointerEvents: 'none',
         visibility: 'hidden'
       }}>
-        <div style={{
+        <div className="mobile-wave-glow" style={{
           position: 'absolute', bottom: '-20%', right: '-10%', width: '80%', aspectRatio: '1',
           background: 'radial-gradient(closest-side, rgba(40, 190, 255, 0.25), transparent 70%)',
           filter: 'blur(60px)', zIndex: 1
         }}></div>
-        <img src="https://cdn.shopify.com/s/files/1/0185/5999/1872/files/blue_strand_transparent.png?v=1778949964" alt="Fluxo azul decorativo" style={{ 
+        <img className="mobile-wave-img" src="https://cdn.shopify.com/s/files/1/0185/5999/1872/files/blue_strand_transparent.png?v=1778949964" alt="Fluxo azul decorativo" style={{ 
           position: 'absolute', bottom: '-15%', right: '-15%', width: '70vw', height: 'auto', 
           zIndex: 2, transform: 'scaleX(-1) rotate(-15deg)', opacity: 0.8,
           WebkitMaskImage: 'radial-gradient(60% 60% at 50% 50%, black 40%, transparent 100%)',
