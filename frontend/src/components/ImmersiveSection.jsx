@@ -386,6 +386,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
       gsap.set(waveRef.current, { autoAlpha: 1, scale: 1, x: 0 });
       
       gsap.set(teamClusterRef.current.querySelectorAll('.marquee-item'), { autoAlpha: 1, y: 0, filter: "none" });
+      gsap.set(teamClusterRef.current.querySelectorAll('.marquee-indicator'), { opacity: 0.6 });
     });
 
     return () => mm.revert();

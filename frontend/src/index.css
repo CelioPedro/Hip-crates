@@ -1243,7 +1243,7 @@ img {
   .immersive-section {
     flex-direction: column !important;
     justify-content: flex-start !important;
-    padding: 40px 0 !important;
+    padding: 40px 0 140px 0 !important; /* Space for the absolute footer */
     min-height: auto !important;
     overflow: visible !important; /* Allow the bust to overflow visually into the hero */
     margin-top: 0 !important; /* FIXED: Removed destructive -35vh */
@@ -1397,20 +1397,23 @@ img {
   }
   .marquee-horizontal-mask,
   .marquee-indicator {
-    display: none !important;
+    /* Restore indicators on mobile so user knows it's scrollable */
+    display: flex;
   }
   .marquee-scroll-area {
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
+    height: 35vh !important;       
+    min-height: 250px !important;
+    max-height: 350px !important;
+    overflow-y: auto !important;   /* Restore scroll */
+    margin-bottom: 60px !important; /* Space above footer */
+    pointer-events: auto !important;
+    /* We ensure the list takes its full scrollable space but is confined */
   }
   .marquee-item {
-    font-size: 24px !important;
-    padding: 12px 0 !important;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
+    justify-content: center !important; /* Center the names on mobile */
   }
 }
 
