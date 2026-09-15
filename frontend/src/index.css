@@ -1417,15 +1417,23 @@ img {
   }
 
   /* Merge wave with footer on mobile by removing negative bottom offset */
+  .mobile-wave-wrapper {
+    /* Removed overflow: hidden to prevent aggressive vertical border cut */
+  }
   .mobile-wave-img {
-    bottom: 0 !important;
-    right: 0 !important;
-    width: 100vw !important;
-    opacity: 0.5 !important; /* Slightly more transparent so text is legible */
+    bottom: -5vh !important;
+    right: 0 !important; /* Lock to right edge without bleeding */
+    width: 100vw !important; /* Fit exactly in viewport to prevent horizontal scroll */
+    opacity: 0.35 !important;
+    transform: scaleX(1) rotate(5deg) !important; /* Flipped and slightly tilted */
+    -webkit-mask-image: none !important; /* Nuke the inline mask to prevent circular bite marks */
+    mask-image: none !important;
+    -webkit-mask: none !important;
+    mask: none !important;
   }
   .mobile-wave-glow {
-    bottom: 0 !important;
-    right: 0 !important;
+    bottom: -10vh !important;
+    right: -20vw !important;
   }
 }
 
