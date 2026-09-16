@@ -29,6 +29,7 @@
   overflow: hidden;
   position: relative;
   transform-origin: center bottom;
+  box-sizing: border-box;
 }
 
 .chat-header {
@@ -166,10 +167,13 @@
   display: flex;
   gap: 12px;
   align-items: center;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .chat-input-area input {
   flex: 1;
+  min-width: 0; /* Allows input to shrink below placeholder text width */
   background: var(--card-soft);
   border: 1px solid var(--line-2);
   padding: 14px 20px;
@@ -178,6 +182,7 @@
   font-size: 14px;
   outline: none;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
 .chat-input-area input:focus {
@@ -195,6 +200,7 @@
   border: none;
   transition: all 0.2s;
   cursor: pointer;
+  flex-shrink: 0; /* Prevents button from squishing into an oval */
 }
 
 .chat-mic {
