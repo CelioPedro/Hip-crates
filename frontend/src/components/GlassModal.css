@@ -155,7 +155,8 @@
   }
   .glass-modal-content {
     border-radius: 24px 24px 0 0;
-    max-height: 95vh;
+    max-height: 95vh; /* Fallback */
+    max-height: 95dvh;
     border-bottom: none;
     width: 100%;
     margin: 0;
@@ -170,6 +171,6 @@
     font-size: 1.3rem !important; /* Smaller font on mobile so it fits */
   }
   .glass-modal-body {
-    padding: 1.25rem;
+    padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
   }
 }

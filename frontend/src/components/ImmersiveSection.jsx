@@ -398,7 +398,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
       <section ref={sectionRef} className="immersive-section" style={{
         position: 'relative',
         width: '100%',
-        minHeight: '100vh',
+        minHeight: '100dvh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -677,7 +677,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
           </div>
 
           {/* Subtle scroll indicator BOTTOM */}
-          <div className={`marquee-indicator ${!canScrollBottom ? 'hidden' : ''}`} style={{
+          <div className={`marquee-indicator marquee-indicator-bottom ${!canScrollBottom ? 'hidden' : ''}`} style={{
             position: 'absolute',
             bottom: '-25px', 
             left: '50%',

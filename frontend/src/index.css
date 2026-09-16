@@ -53,6 +53,7 @@ body {
   line-height: 1.45;
   overflow-x: hidden;
   min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
 }
 
@@ -105,6 +106,7 @@ img {
   margin: 0 auto;
   padding: 28px clamp(20px, 3vw, 40px) 0px;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ════════════════════════════════════════════════
