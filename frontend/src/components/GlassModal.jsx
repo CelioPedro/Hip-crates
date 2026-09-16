@@ -41,6 +41,7 @@ export default function GlassModal({ isOpen, onClose, title, children }) {
         onAnimationEnd={onAnimationEnd}
         aria-modal="true" 
         role="dialog"
+        style={{ backdropFilter: 'url(#liquid-glass) blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
       >
         <div 
           className="glass-modal-content" 
