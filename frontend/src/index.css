@@ -353,6 +353,31 @@ img {
   padding: 60px 0 40px;
 }
 
+.hero-phases-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  width: 100%;
+}
+
+.hero-phase {
+  grid-column: 1;
+  grid-row: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(15px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero-phase.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
 .eyebrow {
   display: inline-flex;
   align-items: center;
