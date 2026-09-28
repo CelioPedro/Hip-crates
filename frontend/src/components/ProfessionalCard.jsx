@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Heart, Stethoscope, IdentificationBadge, Star, VideoCamera } from '@phosphor-icons/react';
 import './ProfessionalCard.css';
 
-export default function ProfessionalCard({ doc, onClose }) {
+export default function ProfessionalCard({ doc, onClose, onStart }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   React.useEffect(() => {
@@ -20,7 +20,8 @@ export default function ProfessionalCard({ doc, onClose }) {
     } else {
       // Mock action for starting consultation
       console.log('Iniciando triagem com', doc.name);
-      onClose(); // Close the modal for now
+      onClose(); // Close the professional card
+      if (onStart) onStart(); // Open the chat modal
     }
   };
 

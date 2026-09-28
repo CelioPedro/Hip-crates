@@ -734,6 +734,7 @@ export default function ImmersiveSection({ onStart, onOpenModal }) {
       <ProfessionalCard 
         doc={activeProfessional} 
         onClose={() => setActiveProfessional(null)} 
+        onStart={onStart}
       />
     </>
   );
