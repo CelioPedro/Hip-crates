@@ -15,50 +15,38 @@ export default function Hero({ onStart }) {
   return (
     <section className="hero">
       {/* DESKTOP LAYOUT */}
-      <div className="hero-phases-container desktop-only">
-        {/* DESKTOP PHASE 0 */}
-        <div className={`hero-phase ${activePhase === 0 ? 'active' : ''}`}>
-          <h1 className="title desktop-only">
-            <div className="title-line title-line-1">
-              <span className="word">MEDICINA COM IA:</span>
-            </div>
-            <div className="title-line has-desc">
-              <p className="title-desc">Com a triagem baseada em inteligência artificial, otimizamos o atendimento reduzindo filas e conectando você ao especialista ideal.</p>
-              <span className="paren-group">
-                <span className="paren">(</span>
-                <span className="avatar-group" aria-hidden="true">
-                  <img src="https://i.pravatar.cc/100?img=47" alt="User 1" />
-                  <img src="https://i.pravatar.cc/100?img=33" alt="User 2" />
-                  <img src="https://i.pravatar.cc/100?img=12" alt="User 3" />
-                </span>
-                <span className="icon-tile dna-icon">
-                  <img src={`${import.meta.env.BASE_URL}favmed.svg`} alt="Favmed Icon" style={{ width: '25px', height: '25px', objectFit: 'contain', zIndex: 1, position: 'relative' }} />
-                </span>
-                <span className="paren">)</span>
-              </span>
-            </div>
-          </h1>
-        </div>
+      <span className="eyebrow desktop-only">Planos de tratamento personalizados</span>
 
-        {/* DESKTOP PHASE 1 */}
-        <div className={`hero-phase ${activePhase === 1 ? 'active' : ''}`}>
-          <span className="eyebrow desktop-only" style={{ marginBottom: '14px' }}>Planos de tratamento personalizados</span>
-          <h1 className="title desktop-only">
-            <div className="title-line">
-              <span className="word word-redefinindo">REDEFININDO</span>
-            </div>
-            <div className="title-line">
-              <span className="word">A SAÚDE</span>
-              <span className="future-tag">
-                <span className="hero-desc-right" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <ArrowCircleRight weight="fill" size={24} /> 
-                  <span>O futuro é agora — <strong>desbloqueie o potencial da IA</strong></span>
-                </span>
-              </span>
-            </div>
-          </h1>
+      <h1 className="title desktop-only">
+        <div className="title-line title-line-1">
+          <span className="word">MEDICINA COM IA:</span>
         </div>
-      </div>
+        <div className="title-line has-desc">
+          <p className="title-desc">Com a triagem baseada em inteligência artificial, otimizamos o atendimento reduzindo filas e conectando você ao especialista ideal.</p>
+          <span className="paren-group">
+            <span className="paren">(</span>
+            <span className="avatar-group" aria-hidden="true">
+              <img src="https://i.pravatar.cc/100?img=47" alt="User 1" />
+              <img src="https://i.pravatar.cc/100?img=33" alt="User 2" />
+              <img src="https://i.pravatar.cc/100?img=12" alt="User 3" />
+            </span>
+            <span className="icon-tile dna-icon">
+              <img src={`${import.meta.env.BASE_URL}favmed.svg`} alt="Favmed Icon" style={{ width: '25px', height: '25px', objectFit: 'contain', zIndex: 1, position: 'relative' }} />
+            </span>
+            <span className="paren">)</span>
+          </span>
+          <span className="word word-redefinindo">REDEFININDO</span>
+        </div>
+        <div className="title-line">
+          <span className="word">A SAÚDE</span>
+          <span className="future-tag">
+            <span className="hero-desc-right" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ArrowCircleRight weight="fill" size={24} /> 
+              <span>O futuro é agora — <strong>desbloqueie o potencial da IA</strong></span>
+            </span>
+          </span>
+        </div>
+      </h1>
 
       <div className="badge desktop-only" aria-hidden="true">
         <svg className="ring" viewBox="0 0 100 100">
